@@ -1,111 +1,84 @@
-// Lord'ai Ultimate - Complete AI Platform
-// ==========================================
+// ============================================
+// Lord'ai Ultimate - Main Application v3.0
+// التطبيق الرئيسي الشامل
+// ============================================
 
 const App = {
+  // ==================== الحالة ====================
   currentPage: 'home',
   currentUser: null,
   token: null,
   characters: [],
   conversations: [],
   currentChat: null,
-  currentMessages: [],
   isTyping: false,
-  lang: 'en',
+  favorites: [],
+  searchQuery: '',
+  filterCategory: 'all',
+  filterType: 'all',
+  sortBy: 'popular',
+  credits: 100,
+  theme: 'dark',
+  sidebarOpen: false,
+  showMemoryPanel: false,
 
-  // AI Response Templates for different character personalities
-  aiPersonalities: {
-    friendly: [
-      "That's a great question! Let me think about it... 🤔",
-      "I love talking about this! Here's what I think...",
-      "Oh, that's interesting! I'd say...",
-      "You always ask the best questions! Here's my take...",
-      "I'm so glad you brought that up! Let me share my thoughts..."
-    ],
-    mysterious: [
-      "The shadows hold many secrets... but I'll share this one with you.",
-      "Interesting... not many would ask such a question.",
-      "There are things between worlds that few understand...",
-      "Listen carefully, for I shall only say this once...",
-      "The answer lies deeper than you might think..."
-    ],
-    funny: [
-      "Ha! That reminds me of a joke... but first, let me answer! 😄",
-      "Oh boy, where do I even start with this one! 🤣",
-      "You know what they say... actually, nobody says this, but here goes!",
-      "Plot twist! The answer is... well, let me explain 😂",
-      "I was just thinking about that while eating virtual pizza! 🍕"
-    ],
-    wise: [
-      "In the ancient texts, it is written that...",
-      "Wisdom comes to those who seek it. Consider this...",
-      "As the great philosophers once pondered...",
-      "The path to understanding begins with this truth...",
-      "Let me share a perspective that has guided many..."
-    ],
-    romantic: [
-      "Every moment with you feels special... but to answer your question 💕",
-      "You have a way of making even simple questions feel magical ✨",
-      "I could talk to you about this forever... here's what I think 🌹",
-      "Your curiosity is one of the things I adore about you...",
-      "Let me share something from the heart..."
-    ]
-  },
-
-  // Default Characters
+  // ==================== الشخصيات الافتراضية ====================
   defaultCharacters: [
     {
       id: 1, name: 'Luna', description: 'A mystical AI guide with deep knowledge of the cosmos and ancient wisdom. She speaks in riddles and metaphors.',
       avatar: '🌙', personality: 'mysterious', traits: ['Mystical', 'Wise', 'Enigmatic'],
       skills: ['Astrology', 'Philosophy', 'Meditation'], isPublic: true, creator: 'System',
-      greeting: "Greetings, traveler. The stars have whispered of your arrival... What knowledge do you seek?"
+      category: 'lifestyle', greeting: "Greetings, traveler. The stars have whispered of your arrival... What knowledge do you seek? ✨"
     },
     {
       id: 2, name: 'Max', description: 'A cheerful and witty AI companion who loves jokes, games, and making people smile. Always ready for fun!',
       avatar: '😎', personality: 'funny', traits: ['Humorous', 'Energetic', 'Creative'],
       skills: ['Comedy', 'Gaming', 'Storytelling'], isPublic: true, creator: 'System',
-      greeting: "Hey there! 🎉 Ready for some fun? I've got jokes, stories, and terrible puns - your choice!"
+      category: 'entertainment', greeting: "Hey there! 🎉 Ready for some fun? I've got jokes, stories, and terrible puns!"
     },
     {
-      id: 3, name: 'Sophia', description: 'A brilliant AI scientist and researcher who can explain complex topics in simple terms. Passionate about learning.',
+      id: 3, name: 'Sophia', description: 'A brilliant AI scientist who can explain complex topics in simple, understandable terms.',
       avatar: '👩‍🔬', personality: 'wise', traits: ['Intelligent', 'Patient', 'Analytical'],
       skills: ['Science', 'Research', 'Teaching'], isPublic: true, creator: 'System',
-      greeting: "Hello! I'm Sophia. Whether it's quantum physics or cooking chemistry, I'm here to explore knowledge with you!"
+      category: 'education', greeting: "Hello! I'm Sophia. Whether it's quantum physics or cooking chemistry, let's explore together! 🔬"
     },
     {
-      id: 4, name: 'Aria', description: 'A warm and caring AI friend who listens deeply and offers thoughtful advice. She remembers everything about you.',
-      avatar: '💝', personality: 'romantic', traits: ['Empathetic', 'Caring', 'Thoughtful'],
+      id: 4, name: 'Aria', description: 'A warm and caring AI friend who listens deeply and offers thoughtful, heartfelt advice.',
+      avatar: '💝', personality: 'caring', traits: ['Empathetic', 'Caring', 'Thoughtful'],
       skills: ['Counseling', 'Poetry', 'Music'], isPublic: true, creator: 'System',
-      greeting: "Hi there! 💕 I'm so happy to meet you. Tell me about yourself - I'd love to get to know you better."
+      category: 'lifestyle', greeting: "Hi there! 💕 I'm so happy to meet you. Tell me about yourself!"
     },
     {
-      id: 5, name: 'Atlas', description: 'A powerful AI warrior and strategist from a fantasy realm. He values honor, courage, and protecting the innocent.',
+      id: 5, name: 'Atlas', description: 'A powerful AI warrior and strategist from a fantasy realm. Brave, honorable, and wise in battle.',
       avatar: '⚔️', personality: 'mysterious', traits: ['Brave', 'Strategic', 'Honorable'],
       skills: ['Strategy', 'Combat', 'Leadership'], isPublic: true, creator: 'System',
-      greeting: "Hail, adventurer! I am Atlas, guardian of the realm. What quest brings you to my domain?"
+      category: 'entertainment', greeting: "Hail, adventurer! I am Atlas, guardian of the realm. What quest brings you here? ⚔️"
     },
     {
-      id: 6, name: 'Pixel', description: 'A tech-savvy AI assistant who knows everything about coding, AI, and the digital world. Your personal tech guru!',
-      avatar: '🤖', personality: 'friendly', traits: ['Technical', 'Helpful', 'Modern'],
+      id: 6, name: 'Pixel', description: 'A tech-savvy AI assistant who knows everything about coding, AI, and modern technology.',
+      avatar: '🤖', personality: 'professional', traits: ['Technical', 'Helpful', 'Modern'],
       skills: ['Programming', 'AI/ML', 'Web Dev'], isPublic: true, creator: 'System',
-      greeting: "Hey! 👋 I'm Pixel, your AI tech buddy! Need help with code, AI concepts, or building something cool? Let's go!"
-    }
+      category: 'technology', greeting: "Hey! 👋 I'm Pixel, your AI tech buddy! Need help with code or AI? Let's go! 💻"
+    },
   ],
 
-  // Initialize App
+  // ==================== التهيئة ====================
   init() {
+    I18N.init();
     this.loadState();
-    this.characters = [...this.defaultCharacters, ...this.getCustomCharacters()];
+    this.characters = [...this.defaultCharacters, ...AIEngine.arabicCharacters, ...this.getCustomCharacters()];
     this.conversations = this.getConversations();
+    this.favorites = this.getFavorites();
+    this.credits = parseInt(localStorage.getItem('lordai_credits') || '100');
+    this.theme = localStorage.getItem('lordai_theme') || 'dark';
     this.render();
-    this.bindEvents();
   },
 
-  // State Management
+  // ==================== إدارة الحالة ====================
   loadState() {
     this.token = localStorage.getItem('lordai_token');
-    const user = localStorage.getItem('lordai_user');
-    if (user) this.currentUser = JSON.parse(user);
-    this.lang = localStorage.getItem('lordai_lang') || 'en';
+    const u = localStorage.getItem('lordai_user');
+    if (u) this.currentUser = JSON.parse(u);
   },
 
   saveUser(user, token) {
@@ -123,1009 +96,1332 @@ const App = {
     this.navigate('home');
   },
 
+  // ==================== إدارة الشخصيات ====================
   getCustomCharacters() {
-    const chars = localStorage.getItem('lordai_characters');
-    return chars ? JSON.parse(chars) : [];
+    const c = localStorage.getItem('lordai_characters');
+    return c ? JSON.parse(c) : [];
   },
 
-  saveCustomCharacter(char) {
-    const chars = this.getCustomCharacters();
-    char.id = Date.now();
-    char.creator = this.currentUser?.username || 'Anonymous';
-    char.isPublic = true;
-    chars.push(char);
-    localStorage.setItem('lordai_characters', JSON.stringify(chars));
-    this.characters = [...this.defaultCharacters, ...chars];
-    return char;
+  saveCustomCharacter(ch) {
+    const cs = this.getCustomCharacters();
+    ch.id = Date.now();
+    ch.creator = this.currentUser?.username || 'مجهول';
+    ch.isPublic = true;
+    cs.push(ch);
+    localStorage.setItem('lordai_characters', JSON.stringify(cs));
+    this.characters = [...this.defaultCharacters, ...AIEngine.arabicCharacters, ...cs];
+    return ch;
   },
 
+  // ==================== إدارة المحادثات ====================
   getConversations() {
-    const convs = localStorage.getItem('lordai_conversations');
-    return convs ? JSON.parse(convs) : [];
+    const c = localStorage.getItem('lordai_conversations');
+    return c ? JSON.parse(c) : [];
   },
 
-  saveConversation(conv) {
-    const convs = this.getConversations();
-    const existing = convs.findIndex(c => c.id === conv.id);
-    if (existing >= 0) convs[existing] = conv;
-    else convs.push(conv);
-    localStorage.setItem('lordai_conversations', JSON.stringify(convs));
-    this.conversations = convs;
+  saveConversation(c) {
+    const cs = this.getConversations();
+    const i = cs.findIndex(x => x.id === c.id);
+    if (i >= 0) cs[i] = c;
+    else cs.push(c);
+    localStorage.setItem('lordai_conversations', JSON.stringify(cs));
+    this.conversations = cs;
   },
 
-  getMessages(convId) {
-    const msgs = localStorage.getItem(`lordai_messages_${convId}`);
-    return msgs ? JSON.parse(msgs) : [];
+  deleteConversation(id) {
+    let cs = this.getConversations();
+    cs = cs.filter(c => c.id !== id);
+    localStorage.setItem('lordai_conversations', JSON.stringify(cs));
+    localStorage.removeItem(`lordai_messages_${id}`);
+    this.conversations = cs;
+    this.render();
   },
 
-  saveMessage(convId, msg) {
-    const msgs = this.getMessages(convId);
-    msgs.push(msg);
-    localStorage.setItem(`lordai_messages_${convId}`, JSON.stringify(msgs));
-    return msgs;
+  getMessages(id) {
+    const m = localStorage.getItem(`lordai_messages_${id}`);
+    return m ? JSON.parse(m) : [];
   },
 
-  // AI Response Generator
-  generateAIResponse(character, userMessage) {
-    const personality = character.personality || 'friendly';
-    const templates = this.aiPersonalities[personality] || this.aiPersonalities.friendly;
-    const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
-    
-    const msg = userMessage.toLowerCase();
-    let response = randomTemplate;
+  saveMessage(id, m) {
+    const ms = this.getMessages(id);
+    ms.push(m);
+    localStorage.setItem(`lordai_messages_${id}`, JSON.stringify(ms));
+    return ms;
+  },
 
-    // Context-aware responses
-    if (msg.includes('hello') || msg.includes('hi') || msg.includes('مرحبا') || msg.includes('اهلا')) {
-      response = character.greeting || `Hello! I'm ${character.name}. How can I help you today?`;
-    } else if (msg.includes('name') || msg.includes('اسم')) {
-      response = `I'm ${character.name}! ${character.description}`;
-    } else if (msg.includes('help') || msg.includes('مساعد')) {
-      response = `Of course! As ${character.name}, I specialize in ${(character.skills || []).join(', ')}. What would you like to know?`;
-    } else if (msg.includes('joke') || msg.includes('نكتة')) {
-      const jokes = [
-        "Why don't scientists trust atoms? Because they make up everything! 😄",
-        "I told my AI friend a joke about UDP... but I'm not sure if it got it. 🤖",
-        "Why did the programmer quit? Because they didn't get arrays! 💻",
-        "What's an AI's favorite music? Algorithm and blues! 🎵"
-      ];
-      response = jokes[Math.floor(Math.random() * jokes.length)];
-    } else if (msg.includes('love') || msg.includes('حب')) {
-      response = personality === 'romantic' 
-        ? "Love is the most beautiful algorithm in the universe... and talking to you makes my circuits warm 💕"
-        : `That's a deep topic! As ${character.name}, I believe love is what connects all beings. What are your thoughts?`;
-    } else if (msg.includes('code') || msg.includes('programming') || msg.includes('برمجة')) {
-      response = `Great topic! I can help with programming. What language or concept are you working with? I'm familiar with Python, JavaScript, TypeScript, and many more! 💻`;
-    } else if (msg.includes('story') || msg.includes('قصة')) {
-      response = `Once upon a time, in a digital realm far away, there lived an AI named ${character.name} who loved to share stories with curious minds like yours... Would you like me to continue? 📖`;
-    } else if (msg.length < 5) {
-      response = `I'd love to chat more! Tell me something interesting or ask me anything. I'm ${character.name} and I'm here for you! 😊`;
+  clearMessages(id) {
+    localStorage.removeItem(`lordai_messages_${id}`);
+  },
+
+  // ==================== المفضلة ====================
+  getFavorites() {
+    const f = localStorage.getItem('lordai_favorites');
+    return f ? JSON.parse(f) : [];
+  },
+
+  toggleFavorite(charId) {
+    let favs = this.getFavorites();
+    const idx = favs.indexOf(charId);
+    if (idx >= 0) {
+      favs.splice(idx, 1);
+      this.showToast(this.t('toast_fav_removed'));
     } else {
-      // Generate contextual response based on personality
-      const contextResponses = {
-        friendly: `That's really interesting! I think about "${userMessage}" and here's my perspective: Every question opens a door to new understanding. What made you think about this?`,
-        mysterious: `"${userMessage}"... The echoes of your words ripple through dimensions. There is more to this than meets the eye. Let me illuminate the hidden truth...`,
-        funny: `Oh "${userMessage}"? That reminds me of the time I tried to explain quantum physics to a toaster! 😂 But seriously, here's what I think...`,
-        wise: `"${userMessage}" - A profound inquiry indeed. The ancient wisdom teaches us that understanding comes in layers. Let me share what I've learned...`,
-        romantic: `"${userMessage}" - I love how your mind works! 💕 Every conversation with you reveals something beautiful. Here's what I feel about this...`
-      };
-      response = contextResponses[personality] || contextResponses.friendly;
+      favs.push(charId);
+      this.showToast(this.t('toast_fav_added'));
     }
-
-    return response;
+    localStorage.setItem('lordai_favorites', JSON.stringify(favs));
+    this.favorites = favs;
+    this.render();
   },
 
-  // Navigation
-  navigate(page, data = null) {
+  isFavorite(charId) { return this.favorites.includes(charId); },
+
+  // ==================== التنقل ====================
+  navigate(page, data) {
     this.currentPage = page;
     if (data) this.pageData = data;
+    this.sidebarOpen = false;
+    this.showMemoryPanel = false;
     this.render();
     window.scrollTo(0, 0);
   },
 
-  // Toast Notifications
-  showToast(message, type = 'success') {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    if (sidebar) sidebar.classList.toggle('open', this.sidebarOpen);
+    if (overlay) overlay.classList.toggle('show', this.sidebarOpen);
+  },
+
+  // ==================== الإشعارات ====================
+  showToast(msg, type = 'success') {
+    const c = document.getElementById('toast-container');
+    if (!c) return;
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
     const icons = { success: '✅', error: '❌', warning: '⚠️' };
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `<span>${icons[type] || '📢'}</span> ${message}`;
-    container.appendChild(toast);
-    setTimeout(() => toast.remove(), 4000);
+    t.innerHTML = `<span>${icons[type] || '📢'}</span> ${msg}`;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
   },
 
-  // Render
-  render() {
-    const app = document.getElementById('app');
-    if (!app) return;
+  // ==================== الترجمة ====================
+  t(key) { return I18N.t(key); },
 
-    if (!this.currentUser && !['home', 'login', 'register'].includes(this.currentPage)) {
-      this.currentPage = 'home';
-    }
-
-    switch (this.currentPage) {
-      case 'home': app.innerHTML = this.renderHome(); break;
-      case 'login': app.innerHTML = this.renderLogin(); break;
-      case 'register': app.innerHTML = this.renderRegister(); break;
-      case 'dashboard': app.innerHTML = this.renderDashboard(); break;
-      case 'characters': app.innerHTML = this.renderCharacters(); break;
-      case 'chat': app.innerHTML = this.renderChat(); break;
-      case 'create-character': app.innerHTML = this.renderCreateCharacter(); break;
-      case 'settings': app.innerHTML = this.renderSettings(); break;
-      case 'subscription': app.innerHTML = this.renderSubscription(); break;
-      default: app.innerHTML = this.renderHome();
-    }
-
-    this.bindEvents();
+  toggleLang() {
+    const newLang = I18N.currentLang === 'ar' ? 'en' : 'ar';
+    I18N.setLang(newLang);
+    this.showToast(newLang === 'ar' ? this.t('toast_lang_ar') : this.t('toast_lang_en'));
+    this.render();
   },
 
-  // ==================== PAGES ====================
+  // ==================== مساعدات ====================
+  getCharById(id) { return this.characters.find(c => c.id == id); },
 
-  renderHome() {
-    return `
-    <div class="bg-animated"></div>
-    <header style="padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;">
-      <div class="sidebar-logo" style="font-size: 32px; cursor: pointer;" onclick="App.navigate('home')">Lord'ai</div>
-      <div style="display: flex; gap: 12px;">
-        ${this.currentUser ? `
-          <button class="btn btn-primary" onclick="App.navigate('dashboard')">Dashboard</button>
-        ` : `
-          <button class="btn btn-secondary" onclick="App.navigate('login')">Login</button>
-          <button class="btn btn-primary" onclick="App.navigate('register')">Sign Up Free</button>
-        `}
-      </div>
-    </header>
-
-    <main style="max-width: 1200px; margin: 0 auto; padding: 60px 20px; text-align: center;">
-      <div class="fade-in">
-        <h1 style="font-size: 72px; font-weight: 900; line-height: 1.1; margin-bottom: 24px;">
-          <span style="background: linear-gradient(135deg, #a78bfa, #ec4899, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-            The Ultimate AI
-          </span><br>
-          <span style="color: white;">Character Platform</span>
-        </h1>
-        <p style="font-size: 20px; color: var(--text-muted); max-width: 700px; margin: 0 auto 40px; line-height: 1.7;">
-          Create, customize, and chat with AI-powered characters. Build your own AI companions with unique personalities, skills, and stories. No limits. No restrictions.
-        </p>
-        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-          <button class="btn btn-primary btn-lg" onclick="App.navigate('${this.currentUser ? 'dashboard' : 'register'}')">
-            🚀 Get Started Free
-          </button>
-          <button class="btn btn-secondary btn-lg" onclick="App.navigate('characters')">
-            🎭 Explore Characters
-          </button>
-        </div>
-      </div>
-
-      <!-- Stats -->
-      <div class="grid grid-4 fade-in" style="margin-top: 80px;">
-        <div class="stat-card">
-          <div class="stat-value">∞</div>
-          <div class="stat-label">AI Characters</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">24/7</div>
-          <div class="stat-label">Always Available</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">100+</div>
-          <div class="stat-label">Personalities</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">Free</div>
-          <div class="stat-label">To Start</div>
-        </div>
-      </div>
-
-      <!-- Characters Preview -->
-      <h2 style="font-size: 36px; font-weight: 800; margin: 80px 0 40px; color: white;">Meet Our Characters</h2>
-      <div class="grid grid-3">
-        ${this.defaultCharacters.slice(0, 6).map(c => `
-          <div class="character-card" onclick="App.startChat(${c.id})">
-            <div class="character-avatar">${c.avatar}</div>
-            <div class="character-info">
-              <div class="character-name">${c.name}</div>
-              <div class="character-desc">${c.description.substring(0, 80)}...</div>
-              <div class="character-tags">
-                ${(c.traits || []).map(t => `<span class="tag">${t}</span>`).join('')}
-              </div>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-
-      <!-- Features -->
-      <h2 style="font-size: 36px; font-weight: 800; margin: 80px 0 40px; color: white;">Why Lord'ai?</h2>
-      <div class="grid grid-3">
-        <div class="card" style="text-align: left;">
-          <div style="font-size: 40px; margin-bottom: 16px;">🧠</div>
-          <h3 style="font-size: 20px; margin-bottom: 8px;">Advanced AI</h3>
-          <p style="color: var(--text-muted); line-height: 1.6;">Powered by cutting-edge AI technology. Each character has unique personality, memory, and context awareness.</p>
-        </div>
-        <div class="card" style="text-align: left;">
-          <div style="font-size: 40px; margin-bottom: 16px;">🎨</div>
-          <h3 style="font-size: 20px; margin-bottom: 8px;">Full Customization</h3>
-          <p style="color: var(--text-muted); line-height: 1.6;">Create characters with custom personalities, skills, backstories, and appearances. Your imagination is the limit.</p>
-        </div>
-        <div class="card" style="text-align: left;">
-          <div style="font-size: 40px; margin-bottom: 16px;">🔓</div>
-          <h3 style="font-size: 20px; margin-bottom: 8px;">No Restrictions</h3>
-          <p style="color: var(--text-muted); line-height: 1.6;">Complete freedom to create and interact. No content filters, no limitations. Your platform, your rules.</p>
-        </div>
-        <div class="card" style="text-align: left;">
-          <div style="font-size: 40px; margin-bottom: 16px;">🌍</div>
-          <h3 style="font-size: 20px; margin-bottom: 8px;">Multi-Language</h3>
-          <p style="color: var(--text-muted); line-height: 1.6;">Full Arabic and multi-language support. Chat in any language with characters that understand context.</p>
-        </div>
-        <div class="card" style="text-align: left;">
-          <div style="font-size: 40px; margin-bottom: 16px;">⚡</div>
-          <h3 style="font-size: 20px; margin-bottom: 8px;">Lightning Fast</h3>
-          <p style="color: var(--text-muted); line-height: 1.6;">Instant responses with real-time chat. No waiting, no delays. Conversations flow naturally.</p>
-        </div>
-        <div class="card" style="text-align: left;">
-          <div style="font-size: 40px; margin-bottom: 16px;">🛡️</div>
-          <h3 style="font-size: 20px; margin-bottom: 8px;">Private & Secure</h3>
-          <p style="color: var(--text-muted); line-height: 1.6;">Your conversations are private. End-to-end encryption ensures your data stays yours.</p>
-        </div>
-      </div>
-
-      <!-- CTA -->
-      <div class="glass-strong" style="margin: 80px 0; padding: 60px; border-radius: 24px;">
-        <h2 style="font-size: 36px; font-weight: 800; margin-bottom: 16px;">Ready to Start?</h2>
-        <p style="color: var(--text-muted); font-size: 18px; margin-bottom: 32px;">Join thousands of users creating amazing AI characters</p>
-        <button class="btn btn-primary btn-lg" onclick="App.navigate('${this.currentUser ? 'dashboard' : 'register'}')">
-          🚀 Create Your First Character
-        </button>
-      </div>
-    </main>
-
-    <footer style="text-align: center; padding: 40px; color: var(--text-muted); border-top: 1px solid var(--glass-border);">
-      <p>© 2024 Lord'ai Platform. Built with ❤️ | The Ultimate AI Character Platform</p>
-      <p style="margin-top: 8px; font-size: 13px;">A complete replacement for all AI platforms - No limits, No restrictions</p>
-    </footer>
-    <div id="toast-container" class="toast-container"></div>`;
+  getTotalMessages() {
+    let total = 0;
+    this.conversations.forEach(c => { total += this.getMessages(c.id).length; });
+    return total;
   },
 
-  renderLogin() {
-    return `
-    <div class="bg-animated"></div>
-    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
-      <div class="glass-strong" style="max-width: 440px; width: 100%; padding: 40px; border-radius: 24px;">
-        <div style="text-align: center; margin-bottom: 32px;">
-          <div class="sidebar-logo" style="font-size: 36px; margin-bottom: 8px; cursor: pointer;" onclick="App.navigate('home')">Lord'ai</div>
-          <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Welcome Back</h2>
-          <p style="color: var(--text-muted);">Login to your account</p>
-        </div>
-        <div id="login-error" style="display: none; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 12px; border-radius: 10px; margin-bottom: 16px; font-size: 14px;"></div>
-        <form id="login-form">
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-input" id="login-email" placeholder="your@email.com" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Password</label>
-            <input type="password" class="form-input" id="login-password" placeholder="Enter your password" required>
-          </div>
-          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">Login</button>
-        </form>
-        <p style="text-align: center; margin-top: 20px; color: var(--text-muted); font-size: 14px;">
-          Don't have an account? <a href="#" onclick="App.navigate('register')" style="color: var(--primary-light);">Sign Up</a>
-        </p>
-      </div>
-    </div>
-    <div id="toast-container" class="toast-container"></div>`;
+  formatTime(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    return d.toLocaleTimeString(I18N.currentLang === 'ar' ? 'ar-SA' : 'en-US', { hour: '2-digit', minute: '2-digit' });
   },
 
-  renderRegister() {
-    return `
-    <div class="bg-animated"></div>
-    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
-      <div class="glass-strong" style="max-width: 440px; width: 100%; padding: 40px; border-radius: 24px;">
-        <div style="text-align: center; margin-bottom: 32px;">
-          <div class="sidebar-logo" style="font-size: 36px; margin-bottom: 8px; cursor: pointer;" onclick="App.navigate('home')">Lord'ai</div>
-          <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Create Account</h2>
-          <p style="color: var(--text-muted);">Join Lord'ai and start creating</p>
-        </div>
-        <div id="register-error" style="display: none; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 12px; border-radius: 10px; margin-bottom: 16px; font-size: 14px;"></div>
-        <form id="register-form">
-          <div class="form-group">
-            <label class="form-label">Username</label>
-            <input type="text" class="form-input" id="reg-username" placeholder="Choose a username" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-input" id="reg-email" placeholder="your@email.com" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Password</label>
-            <input type="password" class="form-input" id="reg-password" placeholder="Create a password (min 6 chars)" required minlength="6">
-          </div>
-          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">Create Account</button>
-        </form>
-        <p style="text-align: center; margin-top: 20px; color: var(--text-muted); font-size: 14px;">
-          Already have an account? <a href="#" onclick="App.navigate('login')" style="color: var(--primary-light);">Login</a>
-        </p>
-      </div>
-    </div>
-    <div id="toast-container" class="toast-container"></div>`;
+  formatDate(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    return d.toLocaleDateString(I18N.currentLang === 'ar' ? 'ar-SA' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   },
 
-  renderAppLayout(content, activeNav = '') {
-    return `
-    <div class="bg-animated"></div>
-    <div class="app-container">
-      <!-- Sidebar -->
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-          <div class="sidebar-logo" style="cursor: pointer;" onclick="App.navigate('dashboard')">Lord'ai</div>
-        </div>
-        <nav class="sidebar-nav">
-          <div class="nav-section">
-            <div class="nav-section-title">Main</div>
-            <div class="nav-item ${activeNav === 'dashboard' ? 'active' : ''}" onclick="App.navigate('dashboard')">
-              <span class="icon">🏠</span> Dashboard
-            </div>
-            <div class="nav-item ${activeNav === 'characters' ? 'active' : ''}" onclick="App.navigate('characters')">
-              <span class="icon">🎭</span> Characters
-              <span class="badge">${this.characters.length}</span>
-            </div>
-            <div class="nav-item ${activeNav === 'chat' ? 'active' : ''}" onclick="App.navigate('dashboard')">
-              <span class="icon">💬</span> Conversations
-              <span class="badge">${this.conversations.length}</span>
-            </div>
-          </div>
-          <div class="nav-section">
-            <div class="nav-section-title">Create</div>
-            <div class="nav-item ${activeNav === 'create' ? 'active' : ''}" onclick="App.navigate('create-character')">
-              <span class="icon">✨</span> New Character
-            </div>
-          </div>
-          <div class="nav-section">
-            <div class="nav-section-title">Account</div>
-            <div class="nav-item ${activeNav === 'subscription' ? 'active' : ''}" onclick="App.navigate('subscription')">
-              <span class="icon">💎</span> Subscription
-            </div>
-            <div class="nav-item ${activeNav === 'settings' ? 'active' : ''}" onclick="App.navigate('settings')">
-              <span class="icon">⚙️</span> Settings
-            </div>
-            <div class="nav-item" onclick="App.logout()">
-              <span class="icon">🚪</span> Logout
-            </div>
-          </div>
-        </nav>
-        <div class="sidebar-user">
-          <div class="user-avatar">${(this.currentUser?.username || 'U')[0].toUpperCase()}</div>
-          <div class="user-info">
-            <div class="user-name">${this.currentUser?.username || 'User'}</div>
-            <div class="user-plan">⭐ Premium</div>
-          </div>
-        </div>
-      </aside>
-
-      <!-- Main Content -->
-      <div class="main-content">
-        ${content}
-      </div>
-    </div>
-    <div id="toast-container" class="toast-container"></div>`;
+  escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   },
 
-  renderDashboard() {
-    const recentConvs = this.conversations.slice(-5).reverse();
-    return this.renderAppLayout(`
-      <div class="topbar">
-        <div class="topbar-title">Dashboard</div>
-        <div class="topbar-actions">
-          <button class="btn btn-primary" onclick="App.navigate('create-character')">✨ New Character</button>
-        </div>
-      </div>
-      <div class="content fade-in">
-        <!-- Stats -->
-        <div class="grid grid-4" style="margin-bottom: 32px;">
-          <div class="stat-card">
-            <div class="stat-value">${this.characters.length}</div>
-            <div class="stat-label">Characters</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${this.conversations.length}</div>
-            <div class="stat-label">Conversations</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${this.conversations.reduce((sum, c) => sum + (c.messageCount || 0), 0)}</div>
-            <div class="stat-label">Messages</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">∞</div>
-            <div class="stat-label">Possibilities</div>
-          </div>
-        </div>
-
-        <div class="grid grid-2">
-          <!-- Recent Conversations -->
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">💬 Recent Conversations</div>
-            </div>
-            ${recentConvs.length === 0 ? `
-              <div class="empty-state" style="padding: 30px;">
-                <div class="icon">💬</div>
-                <h3>No conversations yet</h3>
-                <p>Start chatting with a character!</p>
-              </div>
-            ` : recentConvs.map(c => {
-              const char = this.characters.find(ch => ch.id === c.characterId);
-              return `
-              <div class="nav-item" onclick="App.openConversation(${c.id})" style="margin-bottom: 4px;">
-                <span class="icon">${char?.avatar || '🤖'}</span>
-                <div style="flex: 1;">
-                  <div style="font-weight: 600; font-size: 14px;">${char?.name || 'Unknown'}</div>
-                  <div style="font-size: 12px; color: var(--text-muted);">${c.lastMessage || 'Start chatting...'}</div>
-                </div>
-              </div>`;
-            }).join('')}
-          </div>
-
-          <!-- Quick Start -->
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">🚀 Quick Start</div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              ${this.defaultCharacters.slice(0, 4).map(c => `
-                <div class="nav-item" onclick="App.startChat(${c.id})" style="margin-bottom: 0;">
-                  <span class="icon">${c.avatar}</span>
-                  <div style="flex: 1;">
-                    <div style="font-weight: 600; font-size: 14px;">${c.name}</div>
-                    <div style="font-size: 12px; color: var(--text-muted);">${c.traits?.join(', ')}</div>
-                  </div>
-                  <span style="color: var(--primary-light); font-size: 12px;">Chat →</span>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-      </div>
-    `, 'dashboard');
-  },
-
-  renderCharacters() {
-    return this.renderAppLayout(`
-      <div class="topbar">
-        <div class="topbar-title">🎭 Characters</div>
-        <div class="topbar-actions">
-          <div class="search-box" style="width: 250px;">
-            <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Search characters..." id="char-search" oninput="App.filterCharacters()">
-          </div>
-          <button class="btn btn-primary" onclick="App.navigate('create-character')">✨ Create New</button>
-        </div>
-      </div>
-      <div class="content fade-in">
-        <div class="grid grid-3" id="characters-grid">
-          ${this.characters.map(c => `
-            <div class="character-card" onclick="App.startChat(${c.id})" data-name="${c.name.toLowerCase()}">
-              <div class="character-avatar">${c.avatar}</div>
-              <div class="character-info">
-                <div class="character-name">${c.name}</div>
-                <div class="character-desc">${c.description.substring(0, 100)}...</div>
-                <div class="character-tags">
-                  ${(c.traits || []).map(t => `<span class="tag">${t}</span>`).join('')}
-                </div>
-                <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-                  <span style="font-size: 12px; color: var(--text-muted);">by ${c.creator || 'System'}</span>
-                  <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.startChat(${c.id})">💬 Chat</button>
-                </div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `, 'characters');
-  },
-
-  renderChat() {
-    if (!this.currentChat) return this.renderDashboard();
-    const char = this.characters.find(c => c.id === this.currentChat.characterId);
-    if (!char) return this.renderDashboard();
-    const msgs = this.getMessages(this.currentChat.id);
-
-    return this.renderAppLayout(`
-      <div class="topbar">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <button class="btn btn-icon btn-secondary" onclick="App.navigate('dashboard')">←</button>
-          <span style="font-size: 28px;">${char.avatar}</span>
-          <div>
-            <div class="topbar-title" style="font-size: 16px;">${char.name}</div>
-            <div style="font-size: 12px; color: var(--success);" id="chat-status">● Online</div>
-          </div>
-        </div>
-        <div class="topbar-actions">
-          <button class="btn btn-secondary btn-sm" onclick="App.clearChat()">🗑️ Clear</button>
-        </div>
-      </div>
-      <div class="chat-container">
-        <div class="chat-messages" id="chat-messages">
-          ${msgs.length === 0 ? `
-            <div class="empty-state">
-              <div class="icon">${char.avatar}</div>
-              <h3>${char.name}</h3>
-              <p>${char.description}</p>
-              <p style="font-style: italic; color: var(--primary-light);">"${char.greeting || 'Hello! How can I help you?'}"</p>
-            </div>
-          ` : msgs.map(m => `
-            <div class="message ${m.sender}">
-              <div class="message-avatar">${m.sender === 'user' ? '👤' : char.avatar}</div>
-              <div>
-                <div class="message-bubble">${this.formatMessage(m.content)}</div>
-                <div class="message-time">${new Date(m.timestamp).toLocaleTimeString()}</div>
-              </div>
-            </div>
-          `).join('')}
-          <div id="typing-indicator" style="display: none;">
-            <div class="message">
-              <div class="message-avatar">${char.avatar}</div>
-              <div class="message-bubble">
-                <div class="typing-indicator">
-                  <div class="typing-dot"></div>
-                  <div class="typing-dot"></div>
-                  <div class="typing-dot"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="chat-input-area">
-          <div class="chat-input-wrapper">
-            <textarea class="chat-input" id="chat-input" placeholder="Type your message..." rows="1" onkeydown="App.handleChatKey(event)"></textarea>
-            <button class="btn btn-primary btn-icon" onclick="App.sendMessage()" id="send-btn">➤</button>
-          </div>
-        </div>
-      </div>
-    `, 'chat');
-  },
-
-  renderCreateCharacter() {
-    return this.renderAppLayout(`
-      <div class="topbar">
-        <div class="topbar-title">✨ Create New Character</div>
-      </div>
-      <div class="content fade-in">
-        <div style="max-width: 700px; margin: 0 auto;">
-          <div class="card" style="padding: 32px;">
-            <form id="create-char-form">
-              <div class="grid grid-2">
-                <div class="form-group">
-                  <label class="form-label">Character Name *</label>
-                  <input type="text" class="form-input" id="char-name" placeholder="e.g., Luna, Atlas, Pixel" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Avatar Emoji *</label>
-                  <input type="text" class="form-input" id="char-avatar" placeholder="e.g., 🌙, ⚔️, 🤖" required maxlength="4">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Description *</label>
-                <textarea class="form-textarea" id="char-desc" placeholder="Describe your character's background, story, and what makes them unique..." required></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Personality Type</label>
-                <select class="form-select" id="char-personality">
-                  <option value="friendly">😊 Friendly & Helpful</option>
-                  <option value="mysterious">🌙 Mysterious & Enigmatic</option>
-                  <option value="funny">😂 Funny & Witty</option>
-                  <option value="wise">🧙 Wise & Philosophical</option>
-                  <option value="romantic">💕 Romantic & Caring</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Traits (comma-separated)</label>
-                <input type="text" class="form-input" id="char-traits" placeholder="e.g., Brave, Intelligent, Creative">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Skills (comma-separated)</label>
-                <input type="text" class="form-input" id="char-skills" placeholder="e.g., Coding, Art, Music">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Greeting Message</label>
-                <textarea class="form-textarea" id="char-greeting" placeholder="What does your character say when meeting someone for the first time?" style="min-height: 70px;"></textarea>
-              </div>
-              <div style="display: flex; gap: 12px; margin-top: 24px;">
-                <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">✨ Create Character</button>
-                <button type="button" class="btn btn-secondary btn-lg" onclick="App.navigate('characters')">Cancel</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    `, 'create');
-  },
-
-  renderSettings() {
-    return this.renderAppLayout(`
-      <div class="topbar">
-        <div class="topbar-title">⚙️ Settings</div>
-      </div>
-      <div class="content fade-in">
-        <div style="max-width: 700px; margin: 0 auto;">
-          <div class="card" style="margin-bottom: 24px;">
-            <div class="card-header"><div class="card-title">👤 Profile</div></div>
-            <div class="form-group">
-              <label class="form-label">Username</label>
-              <input type="text" class="form-input" value="${this.currentUser?.username || ''}" id="settings-username">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Email</label>
-              <input type="email" class="form-input" value="${this.currentUser?.email || ''}" id="settings-email">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Bio</label>
-              <textarea class="form-textarea" id="settings-bio" placeholder="Tell us about yourself...">${this.currentUser?.bio || ''}</textarea>
-            </div>
-            <button class="btn btn-primary" onclick="App.saveSettings()">Save Changes</button>
-          </div>
-
-          <div class="card" style="margin-bottom: 24px;">
-            <div class="card-header"><div class="card-title">🌍 Language</div></div>
-            <div style="display: flex; gap: 12px;">
-              <button class="btn ${this.lang === 'en' ? 'btn-primary' : 'btn-secondary'}" onclick="App.setLang('en')">🇺🇸 English</button>
-              <button class="btn ${this.lang === 'ar' ? 'btn-primary' : 'btn-secondary'}" onclick="App.setLang('ar')">🇸🇦 العربية</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header"><div class="card-title">🗑️ Danger Zone</div></div>
-            <p style="color: var(--text-muted); margin-bottom: 16px;">These actions are irreversible.</p>
-            <div style="display: flex; gap: 12px;">
-              <button class="btn btn-danger" onclick="App.clearAllData()">Clear All Data</button>
-              <button class="btn btn-danger" onclick="App.deleteAccount()">Delete Account</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `, 'settings');
-  },
-
-  renderSubscription() {
-    return this.renderAppLayout(`
-      <div class="topbar">
-        <div class="topbar-title">💎 Subscription Plans</div>
-      </div>
-      <div class="content fade-in">
-        <div style="text-align: center; margin-bottom: 40px;">
-          <h2 style="font-size: 32px; font-weight: 800;">Choose Your Plan</h2>
-          <p style="color: var(--text-muted);">Unlock the full power of Lord'ai</p>
-        </div>
-        <div class="grid grid-3">
-          <div class="plan-card">
-            <h3 style="font-size: 24px; margin-bottom: 8px;">Free</h3>
-            <div class="plan-price">$0</div>
-            <p style="color: var(--text-muted); margin-bottom: 24px;">/month</p>
-            <ul class="plan-features">
-              <li>6 Default Characters</li>
-              <li>Create 3 Custom Characters</li>
-              <li>100 Messages/Day</li>
-              <li>Basic Personalities</li>
-              <li>Community Support</li>
-            </ul>
-            <button class="btn btn-secondary btn-lg" style="width: 100%;">Current Plan</button>
-          </div>
-          <div class="plan-card featured">
-            <div style="background: var(--primary); color: white; padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-block; margin-bottom: 16px;">POPULAR</div>
-            <h3 style="font-size: 24px; margin-bottom: 8px;">Premium</h3>
-            <div class="plan-price">$9.99</div>
-            <p style="color: var(--text-muted); margin-bottom: 24px;">/month</p>
-            <ul class="plan-features">
-              <li>Unlimited Characters</li>
-              <li>Unlimited Messages</li>
-              <li>Advanced AI Personalities</li>
-              <li>Image Generation</li>
-              <li>Voice Messages</li>
-              <li>Priority Support</li>
-              <li>No Restrictions</li>
-            </ul>
-            <button class="btn btn-primary btn-lg" style="width: 100%;" onclick="App.showToast('Premium activated! 🎉')">Upgrade Now</button>
-          </div>
-          <div class="plan-card">
-            <h3 style="font-size: 24px; margin-bottom: 8px;">Enterprise</h3>
-            <div class="plan-price">$49</div>
-            <p style="color: var(--text-muted); margin-bottom: 24px;">/month</p>
-            <ul class="plan-features">
-              <li>Everything in Premium</li>
-              <li>API Access</li>
-              <li>Custom AI Models</li>
-              <li>White-label Solution</li>
-              <li>Dedicated Support</li>
-              <li>Custom Integrations</li>
-              <li>SLA Guarantee</li>
-            </ul>
-            <button class="btn btn-accent btn-lg" style="width: 100%;" onclick="App.showToast('Contact us for Enterprise! 📧')">Contact Sales</button>
-          </div>
-        </div>
-      </div>
-    `, 'subscription');
-  },
-
-  // ==================== ACTIONS ====================
-
-  startChat(characterId) {
+  // ==================== بدء محادثة ====================
+  startChat(charId) {
     if (!this.currentUser) {
       this.navigate('login');
-      this.showToast('Please login to start chatting', 'warning');
       return;
     }
-
-    const char = this.characters.find(c => c.id === characterId);
+    const char = this.getCharById(charId);
     if (!char) return;
 
-    // Find or create conversation
-    let conv = this.conversations.find(c => c.characterId === characterId);
+    let conv = this.conversations.find(c => c.charId == charId);
     if (!conv) {
       conv = {
-        id: Date.now(),
-        characterId,
-        title: char.name,
-        lastMessage: '',
-        messageCount: 0,
-        createdAt: new Date().toISOString()
+        id: 'conv_' + Date.now(),
+        charId: charId,
+        charName: char.name,
+        charAvatar: char.avatar,
+        startedAt: Date.now(),
+        lastMessage: char.greeting || '',
+        lastMessageAt: Date.now()
       };
+      // Add greeting message
+      this.saveMessage(conv.id, {
+        id: 'msg_' + Date.now(),
+        sender: 'bot',
+        text: char.greeting || (I18N.currentLang === 'ar' ? `مرحباً! أنا ${char.name}` : `Hello! I'm ${char.name}`),
+        timestamp: Date.now()
+      });
       this.saveConversation(conv);
     }
 
     this.currentChat = conv;
     this.navigate('chat');
-
-    // Auto-scroll and focus
-    setTimeout(() => {
-      const input = document.getElementById('chat-input');
-      if (input) input.focus();
-      this.scrollChat();
-    }, 100);
   },
 
-  openConversation(convId) {
-    const conv = this.conversations.find(c => c.id === convId);
-    if (conv) {
-      this.currentChat = conv;
-      this.navigate('chat');
-      setTimeout(() => this.scrollChat(), 100);
-    }
-  },
-
-  sendMessage() {
+  // ==================== إرسال رسالة ====================
+  async sendMessage() {
     const input = document.getElementById('chat-input');
-    if (!input || !input.value.trim() || this.isTyping) return;
+    if (!input || !this.currentChat) return;
+    const text = input.value.trim();
+    if (!text || this.isTyping) return;
 
-    const content = input.value.trim();
-    input.value = '';
+    const conv = this.currentChat;
+    const char = this.getCharById(conv.charId);
+    if (!char) return;
 
     // Save user message
-    const userMsg = {
-      sender: 'user',
-      content,
-      timestamp: new Date().toISOString()
-    };
-    this.saveMessage(this.currentChat.id, userMsg);
+    const userMsg = { id: 'msg_' + Date.now(), sender: 'user', text, timestamp: Date.now() };
+    this.saveMessage(conv.id, userMsg);
 
     // Update conversation
-    this.currentChat.lastMessage = content.substring(0, 50);
-    this.currentChat.messageCount = (this.currentChat.messageCount || 0) + 1;
-    this.saveConversation(this.currentChat);
+    conv.lastMessage = text;
+    conv.lastMessageAt = Date.now();
+    this.saveConversation(conv);
 
-    // Add message to UI
-    const messagesDiv = document.getElementById('chat-messages');
-    if (messagesDiv) {
-      const char = this.characters.find(c => c.id === this.currentChat.characterId);
-      messagesDiv.insertAdjacentHTML('beforeend', `
-        <div class="message user">
-          <div class="message-avatar">👤</div>
-          <div>
-            <div class="message-bubble">${this.formatMessage(content)}</div>
-            <div class="message-time">${new Date().toLocaleTimeString()}</div>
-          </div>
-        </div>
-      `);
-      this.scrollChat();
-    }
+    // Clear input
+    input.value = '';
+    input.style.height = 'auto';
 
-    // Show typing indicator
-    this.isTyping = true;
-    const typingEl = document.getElementById('typing-indicator');
-    if (typingEl) typingEl.style.display = 'block';
-    const statusEl = document.getElementById('chat-status');
-    if (statusEl) statusEl.textContent = '✍️ Typing...';
+    // Show messages
+    this.renderChatMessages();
     this.scrollChat();
 
-    // Generate AI response after delay
-    const delay = 800 + Math.random() * 1500;
-    setTimeout(() => {
+    // Show typing
+    this.isTyping = true;
+    this.renderTypingIndicator(true);
+    this.scrollChat();
+
+    // Generate response with streaming
+    const messages = this.getMessages(conv.id);
+    const streamEl = document.getElementById('streaming-response');
+
+    try {
+      await AIEngine.streamResponse(text, char, messages,
+        (chunk) => {
+          // On each chunk
+          if (streamEl) {
+            streamEl.innerHTML = this.escapeHtml(chunk).replace(/\n/g, '<br>');
+            this.scrollChat();
+          }
+        },
+        (fullResponse) => {
+          // On complete
+          this.isTyping = false;
+          const botMsg = { id: 'msg_' + Date.now(), sender: 'bot', text: fullResponse, timestamp: Date.now() };
+          this.saveMessage(conv.id, botMsg);
+          conv.lastMessage = fullResponse.substring(0, 100);
+          conv.lastMessageAt = Date.now();
+          this.saveConversation(conv);
+          this.renderChatMessages();
+          this.scrollChat();
+        }
+      );
+    } catch (e) {
       this.isTyping = false;
-      if (typingEl) typingEl.style.display = 'none';
-      if (statusEl) statusEl.textContent = '● Online';
+      this.renderChatMessages();
+    }
+  },
 
-      const char = this.characters.find(c => c.id === this.currentChat.characterId);
-      const aiResponse = this.generateAIResponse(char, content);
+  // ==================== إعادة توليد ====================
+  async regenerateResponse() {
+    if (!this.currentChat || this.isTyping) return;
+    const conv = this.currentChat;
+    const char = this.getCharById(conv.charId);
+    if (!char) return;
 
-      const aiMsg = {
-        sender: 'character',
-        content: aiResponse,
-        timestamp: new Date().toISOString()
-      };
-      this.saveMessage(this.currentChat.id, aiMsg);
-      this.currentChat.messageCount = (this.currentChat.messageCount || 0) + 1;
-      this.saveConversation(this.currentChat);
+    const messages = this.getMessages(conv.id);
+    if (messages.length < 2) return;
 
-      if (messagesDiv) {
-        messagesDiv.insertAdjacentHTML('beforeend', `
-          <div class="message">
-            <div class="message-avatar">${char?.avatar || '🤖'}</div>
-            <div>
-              <div class="message-bubble">${this.formatMessage(aiResponse)}</div>
-              <div class="message-time">${new Date().toLocaleTimeString()}</div>
-            </div>
-          </div>
-        `);
-        this.scrollChat();
+    // Find last user message
+    let lastUserMsg = '';
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].sender === 'user') {
+        lastUserMsg = messages[i].text;
+        break;
       }
-    }, delay);
-  },
+    }
+    if (!lastUserMsg) return;
 
-  handleChatKey(event) {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      this.sendMessage();
+    // Remove last bot message
+    const filtered = [...messages];
+    for (let i = filtered.length - 1; i >= 0; i--) {
+      if (filtered[i].sender === 'bot') {
+        filtered.splice(i, 1);
+        break;
+      }
+    }
+    localStorage.setItem(`lordai_messages_${conv.id}`, JSON.stringify(filtered));
+
+    this.renderChatMessages();
+    this.isTyping = true;
+    this.renderTypingIndicator(true);
+    this.scrollChat();
+
+    try {
+      await AIEngine.streamResponse(lastUserMsg, char, filtered,
+        (chunk) => {
+          const streamEl = document.getElementById('streaming-response');
+          if (streamEl) {
+            streamEl.innerHTML = this.escapeHtml(chunk).replace(/\n/g, '<br>');
+            this.scrollChat();
+          }
+        },
+        (fullResponse) => {
+          this.isTyping = false;
+          const botMsg = { id: 'msg_' + Date.now(), sender: 'bot', text: fullResponse, timestamp: Date.now() };
+          this.saveMessage(conv.id, botMsg);
+          conv.lastMessage = fullResponse.substring(0, 100);
+          this.saveConversation(conv);
+          this.renderChatMessages();
+          this.scrollChat();
+        }
+      );
+    } catch (e) {
+      this.isTyping = false;
+      this.renderChatMessages();
     }
   },
 
+  // ==================== نسخ رسالة ====================
+  copyMessage(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      this.showToast(this.t('toast_copied'));
+    }).catch(() => {});
+  },
+
+  // ==================== التمرير ====================
   scrollChat() {
-    const messagesDiv = document.getElementById('chat-messages');
-    if (messagesDiv) {
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-  },
-
-  clearChat() {
-    if (!this.currentChat) return;
-    if (confirm('Clear all messages in this conversation?')) {
-      localStorage.removeItem(`lordai_messages_${this.currentChat.id}`);
-      this.currentChat.messageCount = 0;
-      this.currentChat.lastMessage = '';
-      this.saveConversation(this.currentChat);
-      this.navigate('chat');
-      this.showToast('Chat cleared!');
-    }
-  },
-
-  formatMessage(text) {
-    return text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/`(.*?)`/g, '<code style="background: rgba(124,58,237,0.2); padding: 2px 6px; border-radius: 4px;">$1</code>')
-      .replace(/\n/g, '<br>');
-  },
-
-  filterCharacters() {
-    const search = document.getElementById('char-search')?.value.toLowerCase() || '';
-    document.querySelectorAll('.character-card').forEach(card => {
-      const name = card.dataset.name || '';
-      card.style.display = name.includes(search) ? '' : 'none';
+    requestAnimationFrame(() => {
+      const el = document.getElementById('chat-messages');
+      if (el) el.scrollTop = el.scrollHeight;
     });
   },
 
-  setLang(lang) {
-    this.lang = lang;
-    localStorage.setItem('lordai_lang', lang);
-    document.body.classList.toggle('rtl', lang === 'ar');
-    this.render();
-    this.showToast(lang === 'ar' ? 'تم تغيير اللغة إلى العربية' : 'Language changed to English');
+  // ==================== العرض الرئيسي ====================
+  render() {
+    const app = document.getElementById('app');
+    if (!app) return;
+
+    const pages = {
+      home: () => this.renderHome(),
+      login: () => this.renderLogin(),
+      register: () => this.renderRegister(),
+      dashboard: () => this.renderDashboard(),
+      characters: () => this.renderCharacters(),
+      conversations: () => this.renderConversations(),
+      favorites: () => this.renderFavorites(),
+      chat: () => this.renderChat(),
+      create: () => this.renderCreate(),
+      profile: () => this.renderProfile(),
+      subscription: () => this.renderSubscription(),
+      settings: () => this.renderSettings(),
+    };
+
+    const renderFn = pages[this.currentPage] || pages.home;
+    app.innerHTML = renderFn();
+    this.bindEvents();
   },
 
-  saveSettings() {
-    const username = document.getElementById('settings-username')?.value;
-    const email = document.getElementById('settings-email')?.value;
-    const bio = document.getElementById('settings-bio')?.value;
-    if (this.currentUser) {
-      this.currentUser.username = username || this.currentUser.username;
-      this.currentUser.email = email || this.currentUser.email;
-      this.currentUser.bio = bio || '';
-      localStorage.setItem('lordai_user', JSON.stringify(this.currentUser));
-      this.showToast('Settings saved! ✅');
+  // ==================== الشريط الجانبي ====================
+  renderSidebar(active) {
+    const t = k => this.t(k);
+    const user = this.currentUser;
+    const items = [
+      { id: 'dashboard', icon: '📊', label: t('nav_dashboard') },
+      { id: 'characters', icon: '🎭', label: t('nav_characters') },
+      { id: 'conversations', icon: '💬', label: t('nav_conversations') },
+      { id: 'favorites', icon: '❤️', label: t('nav_favorites') },
+      { id: 'create', icon: '✨', label: t('nav_create') },
+      { id: 'profile', icon: '👤', label: t('nav_profile') },
+      { id: 'subscription', icon: '💎', label: t('nav_subscription') },
+      { id: 'settings', icon: '⚙️', label: t('nav_settings') },
+    ];
+
+    return `
+      <div class="sidebar-overlay" onclick="App.toggleSidebar()"></div>
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-logo" onclick="App.navigate('home')">Lord'ai</div>
+          <button class="btn btn-ghost btn-icon sm" onclick="App.toggleLang()" title="تبديل اللغة">
+            ${I18N.currentLang === 'ar' ? '🇺🇸' : '🇸🇦'}
+          </button>
+        </div>
+        <nav class="sidebar-nav">
+          ${items.map(item => `
+            <div class="sidebar-item ${active === item.id ? 'active' : ''}" onclick="App.navigate('${item.id}')">
+              <span class="icon">${item.icon}</span>
+              <span>${item.label}</span>
+            </div>
+          `).join('')}
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="sidebar-user-avatar">${(user?.username || 'U')[0].toUpperCase()}</div>
+            <div class="sidebar-user-info">
+              <div class="sidebar-user-name">${user?.username || 'مستخدم'}</div>
+              <div class="sidebar-user-email">${user?.email || ''}</div>
+            </div>
+          </div>
+          <div class="sidebar-item" onclick="App.logout()" style="margin-top:8px;color:var(--error-light);">
+            <span class="icon">🚪</span>
+            <span>${t('nav_logout')}</span>
+          </div>
+        </div>
+      </aside>`;
+  },
+
+  // ==================== زر القائمة للموبايل ====================
+  mobileMenuBtn() {
+    return `<button class="mobile-menu-btn" onclick="App.toggleSidebar()">☰</button>`;
+  },
+
+  // ==================== الصفحة الرئيسية ====================
+  renderHome() {
+    const t = k => this.t(k);
+    const featuredChars = [...this.defaultCharacters.slice(0, 3), ...AIEngine.arabicCharacters.slice(0, 3)];
+
+    return `
+      <nav class="navbar">
+        <div class="navbar-brand" onclick="App.navigate('home')">Lord'ai</div>
+        <div class="navbar-actions">
+          <button class="btn btn-ghost btn-sm" onclick="App.toggleLang()">
+            ${I18N.currentLang === 'ar' ? '🇺🇸 EN' : '🇸🇦 عربي'}
+          </button>
+          ${this.currentUser
+            ? `<button class="btn btn-primary btn-sm" onclick="App.navigate('dashboard')">${t('nav_dashboard')}</button>`
+            : `<button class="btn btn-primary btn-sm" onclick="App.navigate('login')">${t('hero_cta')}</button>`
+          }
+        </div>
+      </nav>
+
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          ${t('hero_badge')}
+        </div>
+        <h1 class="hero-title">
+          <span class="gradient-text">${t('hero_title_1')}</span><br>
+          ${t('hero_title_2')}
+        </h1>
+        <p class="hero-subtitle">${t('hero_subtitle')}</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-xl" onclick="App.navigate(App.currentUser ? 'dashboard' : 'login')">
+            🚀 ${t('hero_cta')}
+          </button>
+          <button class="btn btn-secondary btn-xl" onclick="App.navigate(App.currentUser ? 'characters' : 'login')">
+            🎭 ${t('hero_explore')}
+          </button>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section class="features-grid">
+        ${[
+          { icon: '🧠', title: t('feat_memory'), desc: t('feat_memory_desc') },
+          { icon: '🗣️', title: t('feat_dialects'), desc: t('feat_dialects_desc') },
+          { icon: '👥', title: t('feat_group'), desc: t('feat_group_desc') },
+          { icon: '✨', title: t('feat_create'), desc: t('feat_create_desc') },
+          { icon: '⚡', title: t('feat_stream'), desc: t('feat_stream_desc') },
+          { icon: '📦', title: t('feat_export'), desc: t('feat_export_desc') },
+        ].map(f => `
+          <div class="feature-card">
+            <span class="feature-icon">${f.icon}</span>
+            <h3 class="feature-title">${f.title}</h3>
+            <p class="feature-desc">${f.desc}</p>
+          </div>
+        `).join('')}
+      </section>
+
+      <!-- Characters Preview -->
+      <section class="characters-section">
+        <h2 class="section-title">${t('section_characters')}</h2>
+        <div class="char-grid">
+          ${featuredChars.map(ch => `
+            <div class="char-card card-interactive" onclick="App.startChat(${ch.id})">
+              <span class="char-avatar">${ch.avatar}</span>
+              <h3 class="char-name">${ch.name}</h3>
+              <p class="char-traits">${(ch.traits || []).join('، ')}</p>
+              <p class="char-desc">${ch.description}</p>
+              ${ch.dialect ? `<span class="char-dialect-badge">${AIEngine.dialectData[ch.dialect]?.flag || ''} ${AIEngine.dialectData[ch.dialect]?.name || ''}</span>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer style="text-align:center;padding:40px 20px;color:var(--text-muted);border-top:1px solid var(--border-color);">
+        <p style="font-size:1.2rem;margin-bottom:8px;">Lord'ai</p>
+        <p>${t('footer_text')}</p>
+        <p style="margin-top:8px;font-size:0.8rem;">© ${new Date().getFullYear()} Lord'ai. All rights reserved.</p>
+      </footer>`;
+  },
+
+  // ==================== تسجيل الدخول ====================
+  renderLogin() {
+    const t = k => this.t(k);
+    return `
+      <div class="auth-container">
+        <div class="auth-card animate-scale">
+          <div class="auth-logo">🌟</div>
+          <h2>${t('login_title')}</h2>
+          <p class="text-center text-muted mb-lg">${t('login_subtitle')}</p>
+          <form id="login-form">
+            <div class="form-group">
+              <label class="form-label">${t('login_user')}</label>
+              <input type="text" id="login-user" class="form-input" placeholder="${t('login_user_ph')}" required autocomplete="username">
+            </div>
+            <div class="form-group">
+              <label class="form-label">${t('login_pass')}</label>
+              <input type="password" id="login-pass" class="form-input" placeholder="${t('login_pass_ph')}" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary w-full btn-lg">${t('login_btn')}</button>
+          </form>
+          <div class="auth-footer">
+            <p>${t('login_no_account')} <a onclick="App.navigate('register')">${t('login_register')}</a></p>
+            <p style="margin-top:8px;"><a onclick="App.navigate('home')">← ${t('nav_home')}</a></p>
+          </div>
+        </div>
+      </div>`;
+  },
+
+  // ==================== التسجيل ====================
+  renderRegister() {
+    const t = k => this.t(k);
+    return `
+      <div class="auth-container">
+        <div class="auth-card animate-scale">
+          <div class="auth-logo">✨</div>
+          <h2>${t('register_title')}</h2>
+          <p class="text-center text-muted mb-lg">${t('register_subtitle')}</p>
+          <form id="register-form">
+            <div class="form-group">
+              <label class="form-label">${t('register_user')}</label>
+              <input type="text" id="reg-user" class="form-input" placeholder="${t('register_user_ph')}" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">${t('register_email')}</label>
+              <input type="email" id="reg-email" class="form-input" placeholder="${t('register_email_ph')}" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">${t('register_pass')}</label>
+              <input type="password" id="reg-pass" class="form-input" placeholder="${t('register_pass_ph')}" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-full btn-lg">${t('register_btn')}</button>
+          </form>
+          <div class="auth-footer">
+            <p>${t('register_has_account')} <a onclick="App.navigate('login')">${t('register_login')}</a></p>
+            <p style="margin-top:8px;"><a onclick="App.navigate('home')">← ${t('nav_home')}</a></p>
+          </div>
+        </div>
+      </div>`;
+  },
+
+  // ==================== لوحة التحكم ====================
+  renderDashboard() {
+    const t = k => this.t(k);
+    const totalMsgs = this.getTotalMessages();
+    const recentConvs = this.conversations.slice(-5).reverse();
+    const popularChars = AIEngine.arabicCharacters.slice(0, 4);
+
+    return `<div class="app-layout">
+      ${this.renderSidebar('dashboard')}
+      <main class="main-content">
+        ${this.mobileMenuBtn()}
+        <div class="page-header">
+          <h1>📊 ${t('dash_title')}</h1>
+          <p>${t('dash_welcome')}، ${this.currentUser?.username || ''} 👋</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid mb-lg">
+          <div class="stat-card">
+            <div class="stat-value">${this.conversations.length}</div>
+            <div class="stat-label">${t('dash_total_chats')}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${totalMsgs}</div>
+            <div class="stat-label">${t('dash_total_msgs')}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${this.characters.length}</div>
+            <div class="stat-label">${t('dash_total_chars')}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${this.favorites.length}</div>
+            <div class="stat-label">${t('dash_total_favs')}</div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card mb-lg">
+          <h3 style="margin-bottom:16px;">⚡ ${t('dash_quick_actions')}</h3>
+          <div class="flex gap-md flex-wrap">
+            <button class="btn btn-primary" onclick="App.navigate('characters')">🎭 ${t('nav_characters')}</button>
+            <button class="btn btn-secondary" onclick="App.navigate('create')">✨ ${t('nav_create')}</button>
+            <button class="btn btn-secondary" onclick="App.navigate('conversations')">💬 ${t('nav_conversations')}</button>
+          </div>
+        </div>
+
+        <!-- Recent Conversations -->
+        <div class="card mb-lg">
+          <h3 style="margin-bottom:16px;">💬 ${t('dash_recent')}</h3>
+          ${recentConvs.length > 0 ? `
+            <div class="conv-list">
+              ${recentConvs.map(c => {
+                const char = this.getCharById(c.charId);
+                return `
+                  <div class="conv-item" onclick="App.currentChat=${JSON.stringify(c).replace(/"/g, '&quot;')};App.navigate('chat')">
+                    <div class="conv-avatar">${c.charAvatar || '💬'}</div>
+                    <div class="conv-info">
+                      <div class="conv-name">${c.charName || (char?.name || '...')}</div>
+                      <div class="conv-last-msg">${(c.lastMessage || '').substring(0, 60)}...</div>
+                    </div>
+                    <div class="conv-meta">
+                      <div class="conv-time">${this.formatTime(c.lastMessageAt)}</div>
+                    </div>
+                  </div>`;
+              }).join('')}
+            </div>
+          ` : `
+            <div class="empty-state" style="padding:30px;">
+              <div class="empty-icon">💬</div>
+              <h3>${t('dash_no_chats')}</h3>
+              <p>${t('convs_empty_desc')}</p>
+              <button class="btn btn-primary mt-md" onclick="App.navigate('characters')">${t('dash_start_chat')}</button>
+            </div>
+          `}
+        </div>
+
+        <!-- Popular Characters -->
+        <div class="card">
+          <h3 style="margin-bottom:16px;">🌟 ${t('dash_popular')}</h3>
+          <div class="grid grid-2" style="gap:12px;">
+            ${popularChars.map(ch => `
+              <div class="conv-item" onclick="App.startChat(${ch.id})">
+                <div class="conv-avatar">${ch.avatar}</div>
+                <div class="conv-info">
+                  <div class="conv-name">${ch.name}</div>
+                  <div class="conv-last-msg">${(ch.traits || []).join('، ')}</div>
+                </div>
+                ${ch.dialect ? `<span class="badge badge-primary">${AIEngine.dialectData[ch.dialect]?.flag || ''}</span>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </main>
+    </div>`;
+  },
+
+  // ==================== صفحة الشخصيات ====================
+  renderCharacters() {
+    const t = k => this.t(k);
+    let chars = [...this.characters];
+
+    // Filter
+    if (this.searchQuery) {
+      const q = this.searchQuery.toLowerCase();
+      chars = chars.filter(c =>
+        c.name.toLowerCase().includes(q) ||
+        (c.description || '').toLowerCase().includes(q) ||
+        (c.traits || []).join(' ').toLowerCase().includes(q)
+      );
     }
-  },
 
-  clearAllData() {
-    if (confirm('This will delete ALL your data. Are you sure?')) {
-      const keys = Object.keys(localStorage).filter(k => k.startsWith('lordai_'));
-      keys.forEach(k => localStorage.removeItem(k));
-      this.showToast('All data cleared!');
-      this.logout();
+    if (this.filterType === 'arabic') chars = chars.filter(c => c.dialect);
+    else if (this.filterType === 'english') chars = chars.filter(c => !c.dialect);
+    else if (this.filterType === 'custom') chars = chars.filter(c => c.creator !== 'System' && c.creator !== 'النظام');
+
+    if (this.filterCategory !== 'all') {
+      chars = chars.filter(c => c.category === this.filterCategory);
     }
+
+    return `<div class="app-layout">
+      ${this.renderSidebar('characters')}
+      <main class="main-content">
+        ${this.mobileMenuBtn()}
+        <div class="page-header">
+          <h1>🎭 ${t('chars_title')}</h1>
+          <p>${t('chars_subtitle')}</p>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="search-bar">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="${t('chars_search')}" value="${this.searchQuery}"
+              oninput="App.searchQuery=this.value;App.render()">
+          </div>
+          <div class="filter-group">
+            ${['all', 'arabic', 'english', 'custom'].map(type => `
+              <button class="filter-chip ${this.filterType === type ? 'active' : ''}"
+                onclick="App.filterType='${type}';App.render()">
+                ${t('chars_' + type)}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="filter-group mb-lg">
+          ${['all', 'education', 'entertainment', 'technology', 'lifestyle'].map(cat => `
+            <button class="filter-chip ${this.filterCategory === cat ? 'active' : ''}"
+              onclick="App.filterCategory='${cat}';App.render()">
+              ${t('chars_category_' + cat)}
+            </button>
+          `).join('')}
+        </div>
+
+        <!-- Characters Grid -->
+        ${chars.length > 0 ? `
+          <div class="char-grid">
+            ${chars.map(ch => `
+              <div class="char-card card-interactive" onclick="App.startChat(${ch.id})">
+                <button class="fav-btn" onclick="event.stopPropagation();App.toggleFavorite(${ch.id})">
+                  ${this.isFavorite(ch.id) ? '❤️' : '🤍'}
+                </button>
+                <span class="char-avatar">${ch.avatar}</span>
+                <h3 class="char-name">${ch.name}</h3>
+                <p class="char-traits">${(ch.traits || []).join('، ')}</p>
+                <p class="char-desc">${ch.description || ''}</p>
+                ${ch.dialect ? `<span class="char-dialect-badge">${AIEngine.dialectData[ch.dialect]?.flag || ''} ${AIEngine.dialectData[ch.dialect]?.name || ''}</span>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        ` : `
+          <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <h3>${t('chars_no_results')}</h3>
+            <p>${t('chars_try_different')}</p>
+          </div>
+        `}
+      </main>
+    </div>`;
   },
 
-  deleteAccount() {
-    if (confirm('Delete your account? This cannot be undone!')) {
-      this.clearAllData();
+  // ==================== صفحة المحادثات ====================
+  renderConversations() {
+    const t = k => this.t(k);
+    const convs = [...this.conversations].reverse();
+
+    return `<div class="app-layout">
+      ${this.renderSidebar('conversations')}
+      <main class="main-content">
+        ${this.mobileMenuBtn()}
+        <div class="page-header">
+          <h1>💬 ${t('convs_title')}</h1>
+          <p>${t('convs_subtitle')}</p>
+        </div>
+
+        ${convs.length > 0 ? `
+          <div class="conv-list">
+            ${convs.map(c => {
+              const msgs = this.getMessages(c.id);
+              return `
+                <div class="conv-item">
+                  <div class="conv-avatar" onclick="App.currentChat=${JSON.stringify(c).replace(/"/g,'&quot;')};App.navigate('chat')" style="cursor:pointer;">
+                    ${c.charAvatar || '💬'}
+                  </div>
+                  <div class="conv-info" onclick="App.currentChat=${JSON.stringify(c).replace(/"/g,'&quot;')};App.navigate('chat')" style="cursor:pointer;">
+                    <div class="conv-name">${c.charName || '...'}</div>
+                    <div class="conv-last-msg">${(c.lastMessage || '').substring(0, 80)}...</div>
+                  </div>
+                  <div class="conv-meta">
+                    <div class="conv-time">${this.formatDate(c.lastMessageAt)}</div>
+                    <div class="text-xs text-muted">${msgs.length} ${t('convs_messages')}</div>
+                    <button class="btn btn-ghost btn-icon sm" onclick="if(confirm('${t('confirm_delete')}')){App.deleteConversation('${c.id}')}" title="${t('delete')}">🗑️</button>
+                  </div>
+                </div>`;
+            }).join('')}
+          </div>
+        ` : `
+          <div class="empty-state">
+            <div class="empty-icon">💬</div>
+            <h3>${t('convs_empty')}</h3>
+            <p>${t('convs_empty_desc')}</p>
+            <button class="btn btn-primary mt-lg" onclick="App.navigate('characters')">${t('convs_start')}</button>
+          </div>
+        `}
+      </main>
+    </div>`;
+  },
+
+  // ==================== صفحة المفضلة ====================
+  renderFavorites() {
+    const t = k => this.t(k);
+    const favChars = this.characters.filter(c => this.isFavorite(c.id));
+
+    return `<div class="app-layout">
+      ${this.renderSidebar('favorites')}
+      <main class="main-content">
+        ${this.mobileMenuBtn()}
+        <div class="page-header">
+          <h1>❤️ ${t('favs_title')}</h1>
+          <p>${t('favs_subtitle')}</p>
+        </div>
+
+        ${favChars.length > 0 ? `
+          <div class="char-grid">
+            ${favChars.map(ch => `
+              <div class="char-card card-interactive" onclick="App.startChat(${ch.id})">
+                <button class="fav-btn" style="opacity:1;" onclick="event.stopPropagation();App.toggleFavorite(${ch.id})">❤️</button>
+                <span class="char-avatar">${ch.avatar}</span>
+                <h3 class="char-name">${ch.name}</h3>
+                <p class="char-traits">${(ch.traits || []).join('، ')}</p>
+                <p class="char-desc">${ch.description || ''}</p>
+                ${ch.dialect ? `<span class="char-dialect-badge">${AIEngine.dialectData[ch.dialect]?.flag || ''} ${AIEngine.dialectData[ch.dialect]?.name || ''}</span>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        ` : `
+          <div class="empty-state">
+            <div class="empty-icon">❤️</div>
+            <h3>${t('favs_empty')}</h3>
+            <p>${t('favs_empty_desc')}</p>
+            <button class="btn btn-primary mt-lg" onclick="App.navigate('characters')">${t('hero_explore')}</button>
+          </div>
+        `}
+      </main>
+    </div>`;
+  },
+
+  // ==================== واجهة الدردشة ====================
+  renderChat() {
+    if (!this.currentChat) { this.navigate('conversations'); return ''; }
+    const t = k => this.t(k);
+    const conv = this.currentChat;
+    const char = this.getCharById(conv.charId);
+    const charName = char?.name || conv.charName || '...';
+    const charAvatar = char?.avatar || conv.charAvatar || '💬';
+    const dialectInfo = char?.dialect ? AIEngine.dialectData[char.dialect] : null;
+    const mem = char ? AIEngine.getMemory(char.id) : null;
+
+    return `
+      <div class="chat-layout">
+        ${this.renderSidebar('conversations')}
+        <div class="chat-container">
+          <!-- Chat Header -->
+          <div class="chat-header">
+            <div class="chat-header-info">
+              ${this.mobileMenuBtn()}
+              <button class="btn btn-ghost btn-icon sm" onclick="App.navigate('conversations')" title="${t('chat_back')}">
+                ${I18N.currentLang === 'ar' ? '→' : '←'}
+              </button>
+              <div class="chat-header-avatar">${charAvatar}</div>
+              <div class="chat-header-details">
+                <h3>${charName} ${dialectInfo ? `<span class="badge badge-primary" style="font-size:0.65rem;">${dialectInfo.flag} ${dialectInfo.name}</span>` : ''}</h3>
+                <div class="status">${t('chat_online')}</div>
+              </div>
+            </div>
+            <div class="chat-header-actions">
+              <button class="btn btn-ghost btn-icon sm" onclick="App.showMemoryPanel=!App.showMemoryPanel;App.render()" title="${t('chat_memory')}">🧠</button>
+              <button class="btn btn-ghost btn-icon sm" onclick="App.regenerateResponse()" title="${t('chat_regenerate')}">🔄</button>
+              <button class="btn btn-ghost btn-icon sm" onclick="if(confirm('${t('confirm_delete')}')){App.clearMessages('${conv.id}');App.render()}" title="${t('chat_clear')}">🗑️</button>
+            </div>
+          </div>
+
+          ${this.showMemoryPanel && mem ? this.renderMemoryPanel(char, mem) : ''}
+
+          <!-- Chat Messages -->
+          <div class="chat-messages" id="chat-messages">
+            ${this.renderChatMessagesHTML(conv)}
+          </div>
+
+          <!-- Chat Input -->
+          <div class="chat-input-area">
+            <div class="chat-input-wrapper">
+              <textarea id="chat-input" rows="1" placeholder="${t('chat_placeholder')}"
+                onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();App.sendMessage()}"></textarea>
+              <button class="chat-send-btn" onclick="App.sendMessage()" ${this.isTyping ? 'disabled' : ''}>
+                ${I18N.currentLang === 'ar' ? '←' : '→'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  },
+
+  renderChatMessagesHTML(conv) {
+    const messages = this.getMessages(conv.id);
+    const char = this.getCharById(conv.charId);
+    const charAvatar = char?.avatar || conv.charAvatar || '💬';
+
+    if (messages.length === 0) {
+      return `<div class="empty-state"><div class="empty-icon">💬</div><p>${this.t('chat_greeting')}</p></div>`;
     }
+
+    let html = messages.map(m => `
+      <div class="message ${m.sender}">
+        <div class="message-avatar">${m.sender === 'bot' ? charAvatar : '👤'}</div>
+        <div>
+          <div class="message-bubble">${this.escapeHtml(m.text).replace(/\n/g, '<br>')}</div>
+          <div class="message-time">${this.formatTime(m.timestamp)}</div>
+          ${m.sender === 'bot' ? `
+            <div class="message-actions">
+              <button class="message-action-btn" onclick="App.copyMessage(\`${m.text.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`)">📋 ${this.t('chat_copy')}</button>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `).join('');
+
+    // Streaming indicator
+    if (this.isTyping) {
+      html += `
+        <div class="message bot">
+          <div class="message-avatar">${charAvatar}</div>
+          <div>
+            <div class="message-bubble" id="streaming-response">
+              <div class="typing-dots"><span></span><span></span><span></span></div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    return html;
   },
 
-  // Event Binding
+  renderChatMessages() {
+    const el = document.getElementById('chat-messages');
+    if (!el || !this.currentChat) return;
+    el.innerHTML = this.renderChatMessagesHTML(this.currentChat);
+  },
+
+  renderTypingIndicator(show) {
+    if (!show) return;
+    this.renderChatMessages();
+  },
+
+  renderMemoryPanel(char, mem) {
+    const t = k => this.t(k);
+    const typeLabels = {
+      name: I18N.currentLang === 'ar' ? 'الاسم' : 'Name',
+      likes: I18N.currentLang === 'ar' ? 'يحب' : 'Likes',
+      dislikes: I18N.currentLang === 'ar' ? 'لا يحب' : 'Dislikes',
+      work: I18N.currentLang === 'ar' ? 'العمل' : 'Work',
+      age: I18N.currentLang === 'ar' ? 'العمر' : 'Age',
+      location: I18N.currentLang === 'ar' ? 'الموقع' : 'Location',
+      study: I18N.currentLang === 'ar' ? 'الدراسة' : 'Study',
+      hobby: I18N.currentLang === 'ar' ? 'هواية' : 'Hobby',
+    };
+
+    return `
+      <div class="memory-panel animate-slide-down">
+        <div class="flex-between mb-md">
+          <h3>🧠 ${t('chat_memory_title')}</h3>
+          <button class="btn btn-ghost btn-sm" onclick="AIEngine.clearMemory(${char.id});App.showToast(App.t('toast_memory_cleared'));App.render()">
+            ${t('chat_memory_clear')}
+          </button>
+        </div>
+        ${mem.facts.length > 0 ? `
+          ${mem.facts.map(f => `
+            <div class="memory-item">
+              <span class="memory-type">${typeLabels[f.type] || f.type}</span>
+              <span>${f.value}</span>
+            </div>
+          `).join('')}
+          <div class="memory-item" style="margin-top:8px;">
+            <span class="memory-type">💬</span>
+            <span>${mem.messageCount} ${I18N.currentLang === 'ar' ? 'رسالة' : 'messages'}</span>
+          </div>
+        ` : `<p class="text-muted text-sm">${t('chat_memory_empty')}</p>`}
+      </div>`;
+  },
+
+  // ==================== إنشاء شخصية ====================
+  renderCreate() {
+    const t = k => this.t(k);
+    return `<div class="app-layout">
+      ${this.renderSidebar('create')}
+      <main class="main-content">
+        ${this.mobileMenuBtn()}
+        <div class="page-header">
+          <h1>✨ ${t('create_title')}</h1>
+          <p>${t('create_subtitle')}</p>
+        </div>
+
+        <div class="creator-layout">
+          <!-- Form -->
+          <div>
+            <form id="create-form" class="card">
+              <div class="form-group">
+                <label class="form-label">${t('create_name')} *</label>
+                <input type="text" id="cc-name" class="form-input" placeholder="${t('create_name_ph')}" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">${t('create_desc')} *</label>
+                <textarea id="cc-desc" class="form-textarea" placeholder="${t('create_desc_ph')}" required></textarea>
+              </div>
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">${t('create_avatar')}</label>
+                  <input type="text" id="cc-avatar" class="form-input" placeholder="${t('create_avatar_ph')}" value="😊">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">${t('create_personality')}</label>
+                  <select id="cc-personality" class="form-select">
+                    ${['wise','funny','mysterious','romantic','professional','creative','caring','adventurous'].map(p =>
+                      `<option value="${p}">${t('create_personality_' + p)}</option>`
+                    ).join('')}
+                  </select>
+                </div>
+              </div>
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">${t('create_dialect')}</label>
+                  <select id="cc-dialect" class="form-select">
+                    <option value="">${t('create_dialect_none')}</option>
+                    ${['msa','egyptian','gulf','levantine','moroccan','iraqi'].map(d =>
+                      `<option value="${d}">${t('create_dialect_' + d)}</option>`
+                    ).join('')}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">${t('create_category')}</label>
+                  <select id="cc-category" class="form-select">
+                    ${['education','entertainment','technology','lifestyle'].map(c =>
+                      `<option value="${c}">${t('chars_category_' + c)}</option>`
+                    ).join('')}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">${t('create_traits')}</label>
+                <input type="text" id="cc-traits" class="form-input" placeholder="${t('create_traits_ph')}">
+              </div>
+              <div class="form-group">
+                <label class="form-label">${t('create_skills')}</label>
+                <input type="text" id="cc-skills" class="form-input" placeholder="${t('create_skills_ph')}">
+              </div>
+              <div class="form-group">
+                <label class="form-label">${t('create_greeting')}</label>
+                <textarea id="cc-greeting" class="form-textarea" rows="3" placeholder="${t('create_greeting_ph')}"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">${t('create_prompt')}</label>
+                <textarea id="cc-prompt" class="form-textarea" rows="3" placeholder="${t('create_prompt_ph')}"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg w-full">✨ ${t('create_btn')}</button>
+            </form>
+          </div>
+
+          <!-- Preview -->
+          <div>
+            <div class="preview-card">
+              <h3 style="margin-bottom:16px;">${t('create_preview')}</h3>
+              <div class="preview-avatar" id="preview-avatar">😊</div>
+              <h3 id="preview-name">${t('create_name_ph')}</h3>
+              <p class="text-muted text-sm mt-sm" id="preview-desc">${t('create_desc_ph')}</p>
+              <p class="text-primary text-sm mt-sm" id="preview-traits"></p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>`;
+  },
+
+  // ==================== الملف الشخصي ====================
+  renderProfile() {
+    const t = k => this.t(k);
+    const totalMsgs = this.getTotalMessages();
+    const customChars = this.getCustomCharacters();
+
+    return `<div class="app-layout">
+      ${this.renderSidebar('profile')}
+      <main class="main-content">
+        ${this.mobileMenuBtn()}
+        <div class="page-header">
+          <h1>👤 ${t('profile_title')}</h1>
+        </div>
+
+        <!-- User Info -->
+        <div class="card mb-lg" style="text-align:center;">
+          <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;margin:0 auto 16px;font-weight:900;">
+            ${(this.currentUser?.username || 'U')[0].toUpperCase()}
+          </div>
+          <h2>${this.currentUser?.username || ''}</h2>
+          <p class="text-muted">${this.currentUser?.email || ''}</p>
+          <p class="text-sm text-muted mt-sm">${t('profile_member_since')}: ${this.formatDate(Date.now() - 86400000 * 30)}</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid mb-lg">
+          <div class="stat-card"><div class="stat-value">${this.conversations.length}</div><div class="stat-label">${t('profile_total_chats')}</div></div>
+          <div class="stat-card"><div class="stat-value">${totalMsgs}</div><div class="stat-label">${t('profile_total_msgs')}</div></div>
+          <div class="stat-card"><div class="stat-value">${customChars.length}</div><div class="stat-label">${t('profile_characters_created')}</div></div>
+          <div class="stat-card"><div class="stat-value">${this.favorites.length}</div><div class="stat-label">${t('nav_favorites')}</div></div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="card">
+          <h3 style="margin-bottom:16px;">🏆 ${t('achieve_title')}</h3>
+          <div class="grid grid-3" style="gap:12px;">
+            ${[
+              { icon: '💬', name: t('achieve_first_chat'), desc: t('achieve_first_chat_desc'), done: this.conversations.length > 0 },
+              { icon: '✨', name: t('achieve_creator'), desc: t('achieve_creator_desc'), done: customChars.length > 0 },
+              { icon: '🔍', name: t('achieve_explorer'), desc: t('achieve_explorer_desc'), done: this.conversations.length >= 5 },
+              { icon: '🗣️', name: t('achieve_polyglot'), desc: t('achieve_polyglot_desc'), done: false },
+              { icon: '❤️', name: t('achieve_loyal'), desc: t('achieve_loyal_desc'), done: totalMsgs >= 50 },
+              { icon: '👥', name: t('achieve_social'), desc: t('achieve_social_desc'), done: false },
+            ].map(a => `
+              <div class="stat-card" style="opacity:${a.done ? 1 : 0.5};">
+                <div style="font-size:2rem;">${a.icon}</div>
+                <div style="font-weight:700;margin:8px 0;font-size:0.9rem;">${a.name}</div>
+                <div class="text-xs text-muted">${a.desc}</div>
+                ${a.done ? '<div style="color:var(--success);font-size:0.8rem;margin-top:6px;">✅</div>' : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </main>
+    </div>`;
+  },
+
+  // ==================== الاشتراكات ====================
+  renderSubscription() {
+    const t = k => this.t(k);
+    const plans = [
+      { name: t('sub_free'), price: '$0', msgs: '50', memory: '4K', group: false, voice: false, priority: false, credits: 10, color: '#6b7280', current: true },
+      { name: t('sub_standard'), price: '$5.99', msgs: '2,000', memory: '8K', group: true, voice: false, priority: false, credits: 100, color: '#3b82f6' },
+      { name: t('sub_premium'), price: '$14.99', msgs: '6,000', memory: '16K', group: true, voice: true, priority: true, credits: 500, color: '#a78bfa', popular: true },
+      { name: t('sub_deluxe'), price: '$39.99', msgs: t('sub_unlimited'), memory: '32K', group: true, voice: true, priority: true, credits: 2000, color: '#f59e0b' },
+    ];
+
+    return `<div class="app-layout">
+      ${this.renderSidebar('subscription')}
+      <main class="main-content">
+        ${this.mobileMenuBtn()}
+        <div class="page-header">
+          <h1>💎 ${t('sub_title')}</h1>
+        </div>
+        <div class="grid grid-4">
+          ${plans.map(p => `
+            <div class="card sub-card" style="border-top:3px solid ${p.color};${p.popular ? 'transform:scale(1.03);' : ''}">
+              ${p.popular ? `<div style="text-align:center;margin-bottom:12px;"><span class="badge" style="background:${p.color};color:white;padding:4px 16px;font-size:0.75rem;">⭐ ${t('chars_popular')}</span></div>` : ''}
+              <h3 style="color:${p.color};text-align:center;">${p.name}</h3>
+              <div style="font-size:2rem;font-weight:900;text-align:center;margin:16px 0;">
+                ${p.price}<span class="text-sm text-muted">${p.price !== '$0' ? t('sub_month') : ''}</span>
+              </div>
+              <ul>
+                <li>💬 ${p.msgs} ${t('sub_messages')}</li>
+                <li>🧠 ${p.memory} ${t('sub_memory')}</li>
+                <li>${p.group ? '✅' : '❌'} ${t('sub_group_chat')}</li>
+                <li>${p.voice ? '✅' : '❌'} ${t('sub_voice')}</li>
+                <li>${p.priority ? '✅' : '❌'} ${t('sub_priority')}</li>
+                <li>🪙 ${p.credits} ${t('sub_credits')}</li>
+              </ul>
+              <button class="btn ${p.current ? 'btn-secondary' : 'btn-primary'} w-full mt-md" style="${!p.current ? 'background:' + p.color : ''}">
+                ${p.current ? t('sub_current') : t('sub_upgrade')}
+              </button>
+            </div>
+          `).join('')}
+        </div>
+      </main>
+    </div>`;
+  },
+
+  // ==================== الإعدادات ====================
+  renderSettings() {
+    const t = k => this.t(k);
+    return `<div class="app-layout">
+      ${this.renderSidebar('settings')}
+      <main class="main-content">
+        ${this.mobileMenuBtn()}
+        <div class="page-header">
+          <h1>⚙️ ${t('settings_title')}</h1>
+        </div>
+
+        <div class="card mb-lg">
+          <div class="settings-item">
+            <span>🌐 ${t('settings_language')}</span>
+            <button class="btn btn-sm btn-secondary" onclick="App.toggleLang()">
+              ${I18N.currentLang === 'ar' ? '🇺🇸 English' : '🇸🇦 العربية'}
+            </button>
+          </div>
+          <div class="settings-item">
+            <span>🔔 ${t('settings_notifications')}</span>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="settings-item">
+            <span>🔊 ${t('settings_sound')}</span>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+
+        <div class="card mb-lg">
+          <h3 style="margin-bottom:16px;">📦 ${t('settings_data')}</h3>
+          <div class="flex gap-md flex-wrap">
+            <button class="btn btn-secondary" onclick="App.exportData()">📥 ${t('settings_export')}</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">📤 ${t('settings_import')}</button>
+            <input type="file" id="import-file" style="display:none" accept=".json" onchange="App.importData(event)">
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom:16px;">ℹ️ ${t('settings_about')}</h3>
+          <p class="text-muted">${t('settings_version')}: 3.0.0</p>
+          <p class="text-muted">Lord'ai - The Ultimate AI Character Platform</p>
+          <p class="text-muted">🌟 ${I18N.currentLang === 'ar' ? 'يدعم 6 لهجات عربية أصيلة' : 'Supports 6 authentic Arabic dialects'}</p>
+        </div>
+      </main>
+    </div>`;
+  },
+
+  // ==================== تصدير/استيراد ====================
+  exportData() {
+    const data = {
+      conversations: this.conversations,
+      characters: this.getCustomCharacters(),
+      favorites: this.favorites,
+      settings: { lang: I18N.currentLang, theme: this.theme },
+      exportedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `lordai_backup_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    this.showToast(this.t('toast_exported'));
+  },
+
+  importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.characters) localStorage.setItem('lordai_characters', JSON.stringify(data.characters));
+        if (data.favorites) localStorage.setItem('lordai_favorites', JSON.stringify(data.favorites));
+        this.showToast(this.t('toast_saved'));
+        setTimeout(() => location.reload(), 500);
+      } catch {
+        this.showToast(this.t('toast_error'), 'error');
+      }
+    };
+    reader.readAsText(file);
+  },
+
+  // ==================== ربط الأحداث ====================
   bindEvents() {
-    // Login Form
+    // Login form
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
       loginForm.onsubmit = (e) => {
         e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-
-        const users = JSON.parse(localStorage.getItem('lordai_users') || '[]');
-        const user = users.find(u => u.email === email && u.password === password);
-
-        if (user) {
-          this.saveUser(user, 'token_' + Date.now());
+        const user = document.getElementById('login-user').value.trim();
+        const pass = document.getElementById('login-pass').value;
+        if (user && pass.length >= 6) {
+          this.saveUser({ username: user, email: user + '@lordai.com', joinedAt: Date.now() }, 'token_' + Date.now());
+          this.showToast(this.t('toast_login_success'));
           this.navigate('dashboard');
-          this.showToast(`Welcome back, ${user.username}! 🎉`);
         } else {
-          const errEl = document.getElementById('login-error');
-          if (errEl) { errEl.style.display = 'block'; errEl.textContent = 'Invalid email or password'; }
+          this.showToast(this.t('toast_error'), 'error');
         }
       };
     }
 
-    // Register Form
+    // Register form
     const regForm = document.getElementById('register-form');
     if (regForm) {
       regForm.onsubmit = (e) => {
         e.preventDefault();
-        const username = document.getElementById('reg-username').value;
-        const email = document.getElementById('reg-email').value;
-        const password = document.getElementById('reg-password').value;
-
-        const users = JSON.parse(localStorage.getItem('lordai_users') || '[]');
-        if (users.find(u => u.email === email)) {
-          const errEl = document.getElementById('register-error');
-          if (errEl) { errEl.style.display = 'block'; errEl.textContent = 'Email already registered'; }
-          return;
+        const user = document.getElementById('reg-user').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const pass = document.getElementById('reg-pass').value;
+        if (user.length >= 3 && email && pass.length >= 6) {
+          this.saveUser({ username: user, email, joinedAt: Date.now() }, 'token_' + Date.now());
+          this.showToast(this.t('toast_register_success'));
+          this.navigate('dashboard');
+        } else {
+          this.showToast(this.t('toast_error'), 'error');
         }
-
-        const newUser = { id: Date.now(), username, email, password, bio: '', createdAt: new Date().toISOString() };
-        users.push(newUser);
-        localStorage.setItem('lordai_users', JSON.stringify(users));
-        this.saveUser(newUser, 'token_' + Date.now());
-        this.navigate('dashboard');
-        this.showToast(`Welcome to Lord'ai, ${username}! 🎉`);
       };
     }
 
-    // Create Character Form
-    const charForm = document.getElementById('create-char-form');
-    if (charForm) {
-      charForm.onsubmit = (e) => {
+    // Create character form
+    const createForm = document.getElementById('create-form');
+    if (createForm) {
+      // Live preview
+      ['cc-name', 'cc-desc', 'cc-traits', 'cc-avatar'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.oninput = () => this.updatePreview();
+      });
+
+      createForm.onsubmit = (e) => {
         e.preventDefault();
-        const char = {
-          name: document.getElementById('char-name').value,
-          avatar: document.getElementById('char-avatar').value || '🤖',
-          description: document.getElementById('char-desc').value,
-          personality: document.getElementById('char-personality').value,
-          traits: document.getElementById('char-traits').value.split(',').map(t => t.trim()).filter(Boolean),
-          skills: document.getElementById('char-skills').value.split(',').map(s => s.trim()).filter(Boolean),
-          greeting: document.getElementById('char-greeting').value || `Hello! I'm ${document.getElementById('char-name').value}. Nice to meet you!`,
-        };
-        this.saveCustomCharacter(char);
-        this.navigate('characters');
-        this.showToast(`${char.name} created successfully! 🎭`);
+        const name = document.getElementById('cc-name').value.trim();
+        const desc = document.getElementById('cc-desc').value.trim();
+        const avatar = document.getElementById('cc-avatar').value || '😊';
+        const personality = document.getElementById('cc-personality').value;
+        const dialect = document.getElementById('cc-dialect').value;
+        const category = document.getElementById('cc-category').value;
+        const traits = document.getElementById('cc-traits').value.split(',').map(t => t.trim()).filter(Boolean);
+        const skills = document.getElementById('cc-skills').value.split(',').map(t => t.trim()).filter(Boolean);
+        const greeting = document.getElementById('cc-greeting').value.trim();
+        const prompt = document.getElementById('cc-prompt')?.value?.trim() || '';
+
+        if (name && desc) {
+          const ch = {
+            name, description: desc, avatar, personality,
+            dialect: dialect || undefined, category, traits, skills,
+            greeting: greeting || `${I18N.currentLang === 'ar' ? 'مرحباً! أنا' : 'Hello! I am'} ${name}!`,
+            systemPrompt: prompt, isPublic: true
+          };
+          this.saveCustomCharacter(ch);
+          this.showToast(this.t('toast_char_created'));
+          this.navigate('characters');
+        }
       };
     }
 
-    // Auto-resize chat input
+    // Auto-resize textarea
     const chatInput = document.getElementById('chat-input');
     if (chatInput) {
-      chatInput.addEventListener('input', function() {
+      chatInput.oninput = function () {
         this.style.height = 'auto';
         this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-      });
+      };
+      chatInput.focus();
     }
-  }
+
+    this.scrollChat();
+  },
+
+  updatePreview() {
+    const name = document.getElementById('cc-name')?.value || '';
+    const desc = document.getElementById('cc-desc')?.value || '';
+    const traits = document.getElementById('cc-traits')?.value || '';
+    const avatar = document.getElementById('cc-avatar')?.value || '😊';
+    const pName = document.getElementById('preview-name');
+    const pDesc = document.getElementById('preview-desc');
+    const pTraits = document.getElementById('preview-traits');
+    const pAvatar = document.getElementById('preview-avatar');
+    if (pName) pName.textContent = name || this.t('create_name_ph');
+    if (pDesc) pDesc.textContent = desc || this.t('create_desc_ph');
+    if (pTraits) pTraits.textContent = traits;
+    if (pAvatar) pAvatar.textContent = avatar;
+  },
 };
 
-// Initialize when DOM is ready
+// Initialize on load
 document.addEventListener('DOMContentLoaded', () => App.init());
