@@ -112,6 +112,8 @@ const I18N = {
       // === الدردشة ===
       chat_placeholder: 'اكتب رسالتك هنا...',
       chat_send: 'إرسال',
+      chat_stop: 'إيقاف',
+      chat_stopGeneration: 'إيقاف التوليد'
       chat_typing: 'يكتب...',
       chat_online: 'متصل الآن',
       chat_clear: 'مسح المحادثة',
@@ -234,6 +236,25 @@ const I18N = {
       toast_lang_ar: 'تم التبديل إلى العربية 🇸🇦',
       toast_lang_en: 'Switched to English 🇺🇸',
       toast_exported: 'تم تصدير البيانات بنجاح! 📥',
+
+      // === Branching ===
+      branching_title: '062a064106310639 062706440645062d0627062f062b0627062a',
+      branching_description: '06250646063406270621 06480625062f062706310629 06450633062706310627062a 0645062d0627062f062b0629 0645062e062a064406410629',
+      branching_branchesList: '062706440641063106480639',
+      branching_createBranch: '06250646063406270621 064106310639',
+      branching_delete: '062d06300641',
+      branching_merge: '062f0645062c',
+      branching_messages: '06310633062706260644',
+      branching_forked: '06450634062a0642',
+      branching_messagesSelected: '06310633062706260644 0645062d062f062f0629',
+      branching_noBranches: '06440627 064a0648062c062f 0641063106480639 06280639062f',
+      branching_createFirstBranch: '0623064606340626 062306480644 064106310639 06440643064a 062a0628062f0623 0641064a 06270633062a0643063406270641 06450633062706310627062a 0645062d0627062f062b0629 0645062e062a064406410629',
+      branching_createNewBranch: '06250646063406270621 064106310639 062c062f064a062f',
+      branching_branchNamePlaceholder: '0623062f062e0644 062706330645 06270644064106310639...',
+      branching_create: '06250646063406270621',
+      branching_cancel: '06250644063a06270621',
+      branching_confirmDelete: '06470644 06230646062a 0645062a06230643062f 062306460643 062a0631064a062f 062d06300641 064706300627 06270644064106310639061f',
+      branching_confirmMerge: '06470644 06230646062a 0645062a06230643062f 062306460643 062a0631064a062f 062f0645062c 064706300647 062706440641063106480639061f'
 
       // === عام ===
       section_characters: '✨ تعرّف على شخصياتنا',
@@ -361,7 +382,9 @@ const I18N = {
 
       // === Chat ===
       chat_placeholder: 'Type your message here...',
-      chat_send: 'Send',
+      chat_send: 'إرسال',
+      chat_stop: 'إيقاف',
+      chat_stopGeneration: 'إيقاف التوليد'
       chat_typing: 'typing...',
       chat_online: 'Online',
       chat_clear: 'Clear Chat',
@@ -485,6 +508,25 @@ const I18N = {
       toast_lang_en: 'Switched to English 🇺🇸',
       toast_exported: 'Data exported successfully! 📥',
 
+      // === Branching ===
+      branching_title: '062a064106310639 062706440645062d0627062f062b0627062a',
+      branching_description: '06250646063406270621 06480625062f062706310629 06450633062706310627062a 0645062d0627062f062b0629 0645062e062a064406410629',
+      branching_branchesList: '062706440641063106480639',
+      branching_createBranch: '06250646063406270621 064106310639',
+      branching_delete: '062d06300641',
+      branching_merge: '062f0645062c',
+      branching_messages: '06310633062706260644',
+      branching_forked: '06450634062a0642',
+      branching_messagesSelected: '06310633062706260644 0645062d062f062f0629',
+      branching_noBranches: '06440627 064a0648062c062f 0641063106480639 06280639062f',
+      branching_createFirstBranch: '0623064606340626 062306480644 064106310639 06440643064a 062a0628062f0623 0641064a 06270633062a0643063406270641 06450633062706310627062a 0645062d0627062f062b0629 0645062e062a064406410629',
+      branching_createNewBranch: '06250646063406270621 064106310639 062c062f064a062f',
+      branching_branchNamePlaceholder: '0623062f062e0644 062706330645 06270644064106310639...',
+      branching_create: '06250646063406270621',
+      branching_cancel: '06250644063a06270621',
+      branching_confirmDelete: '06470644 06230646062a 0645062a06230643062f 062306460643 062a0631064a062f 062d06300641 064706300627 06270644064106310639061f',
+      branching_confirmMerge: '06470644 06230646062a 0645062a06230643062f 062306460643 062a0631064a062f 062f0645062c 064706300647 062706440641063106480639061f'
+
       // === General ===
       section_characters: '✨ Meet Our Characters',
       footer_text: 'Made with ❤️ for Arabic language lovers',
@@ -535,3 +577,7 @@ const I18N = {
     return this.translations[this.currentLang]?.[key] || this.translations['ar']?.[key] || key;
   }
 };
+// Make I18N available globally for React hooks
+if (typeof window !== 'undefined') {
+  window.I18N = I18N;
+}

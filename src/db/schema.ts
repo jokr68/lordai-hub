@@ -62,6 +62,7 @@ export const conversations = sqliteTable('conversations', {
 export const messages = sqliteTable('messages', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   conversationId: integer('conversationId').notNull().references(() => conversations.id, { onDelete: 'cascade' }),
+  branchId: integer('branchId').references(() => branches.id, { onDelete: 'set null' }),
   sender: text('sender').notNull(),
   content: text('content').notNull(),
   isVoice: integer('isVoice', { mode: 'boolean' }).default(false),
@@ -105,5 +106,14 @@ export const memories = sqliteTable('memories', {
   characterId: integer('characterId').notNull().references(() => characters.id, { onDelete: 'cascade' }),
   content: text('content').notNull(),
   priority: text('priority').notNull().default('medium'),
+  createdAt: integer('createdAt', { mode: 'timestamp' }).default(sql`CURRENT_TIMESTAMP`),
+});
+
+// Branches Table
+export const branches = sqliteTable('branches', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  conversationId: integer('conversationId').notNull().references(() => conversations.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  parentId: integer('parentId'),
   createdAt: integer('createdAt', { mode: 'timestamp' }).default(sql`CURRENT_TIMESTAMP`),
 });
