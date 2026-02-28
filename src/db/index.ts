@@ -5,4 +5,4 @@ import * as schema from './schema';
 const sqlite = new Database(process.env.DATABASE_URL || './lordai.db');
 sqlite.pragma('journal_mode = WAL');
 
-export const db = drizzle(sqlite, { schema, mode: 'default' });
+export const db = drizzle(sqlite, { schema });

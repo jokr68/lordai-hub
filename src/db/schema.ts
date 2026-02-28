@@ -98,3 +98,12 @@ export const generatedImages = sqliteTable('generated_images', {
   prompt: text('prompt'),
   createdAt: integer('createdAt', { mode: 'timestamp' }).default(sql`CURRENT_TIMESTAMP`),
 });
+
+// Memories Table
+export const memories = sqliteTable('memories', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  characterId: integer('characterId').notNull().references(() => characters.id, { onDelete: 'cascade' }),
+  content: text('content').notNull(),
+  priority: text('priority').notNull().default('medium'),
+  createdAt: integer('createdAt', { mode: 'timestamp' }).default(sql`CURRENT_TIMESTAMP`),
+});

@@ -94,17 +94,45 @@ export default function DashboardPage() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
+        <div className="mb-6 flex flex-wrap gap-4">
+          <button
+            onClick={() => router.push('/memory')}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
+          >
+            🧠 إدارة الذاكرة
+          </button>
+          <button
+            onClick={() => router.push('/export')}
+            className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
+          >
+            📤 تصدير المحادثات
+          </button>
+          <button
+            onClick={() => router.push('/analytics')}
+            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium"
+          >
+            📊 الإحصاءات
+          </button>
+        </div>
         <div className="grid md:grid-cols-2 gap-8">
           {/* Characters Section */}
           <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-white">My Characters</h2>
-              <button
-                onClick={() => router.push('/characters/create')}
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
-              >
-                Create New
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => router.push('/characters/import')}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                >
+                  📁 Import
+                </button>
+                <button
+                  onClick={() => router.push('/characters/create')}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+                >
+                  Create New
+                </button>
+              </div>
             </div>
 
             {characters.length === 0 ? (
